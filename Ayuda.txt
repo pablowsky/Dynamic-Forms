@@ -1,0 +1,135 @@
+||    Acciones:
+--------------------------------------------------------------------------------------------------------------
+"actions":[
+	{"actionType":"show",			"containerId":"x"},
+	{"actionType":"hide",			"containerId":"x"},
+	{"actionType":"disable",		"containerId":"x"},
+	{"actionType":"enable",			"containerId":"x"},
+	{"actionType":"set",			"containerId":"x", 	"itemId":1},
+	{"actionType":"unset",			"containerId":"x", 	"itemId":1}, -- si itemId esta vacio se descheckeq todos los items de containerId o se elimina el texto
+	{"actionType":"addMandatory",	"containerId":"x"},
+	{"actionType":"rmMandatory",	"containerId":"x"},
+]
+
+
+||    Eventos:
+--------------------------------------------------------------------------------------------------------------
+
+
+||    Tipos de Contenedores:
+--------------------------------------------------------------------------------------------------------------
+"type": "linearlayout"
+"type": "scrolllayout"
+"type": "editext"
+"type": "listbox"
+"type": "checkbox"
+"type": "radiobutton"
+"type": "tabitem"
+"type": "add_items"
+"type": "check_items"
+"type": "pictures_gallery"
+"type": "button"
+
+
+
+||    Tipo de uso:
+--------------------------------------------------------------------------------------------------------------
+"usage":"modal",		-- Ventana modal, o dialogo
+"usage":"main" 			-- Ventana principal a mostrar, 
+
+
+||    Propiedades a Implementar:
+--------------------------------------------------------------------------------------------------------------
+-placeholder		-- Insinuacion 
+-text				-- En caso del 	textedit, seria un texto predenidido (Es totalmente distinto del label)
+-nopadding			-- Podria usarse en linearlayout 
+-maxpictures		-- Cantidad maxima de fotos	Usar en: pictures_gallery
+-title				-- Widget para mostrar titulos
+-cardbox
+
+Para v2		 
+-maxoptions			-- Cantidad maxima de opciones: checkbox
+
+
+
+||    Elementos registrados:
+--------------------------------------------------------------------------------------------------------------
+-- Boxes
+"linearlayout"
+"scrolllayout"
+"cardbox"
+
+-- Widgets
+"textedit"
+"dateedit"
+"timeedit"
+"listbox"
+"checkbox"
+"radiobutton"
+"button"
+
+-- Specials
+"tablayout"
+"tabitem"
+
+-- Predefined
+"add_items"
+"check_items"
+"pictures_gallery"
+
+||    Descripcion de elementos:
+--------------------------------------------------------------------------------------------------------------
+
+textedit:
+-----------------------
+{"container": {
+	"type": "editext",
+	"description": "Campo de prueba 1",
+	"id":3,
+	"lines": "1",
+	"inputType": "email",					-- Opciones: email, date, time, number, text(Default)
+	"mandatory":true
+    "orientation": "vertical",				-- Opciones: vertical(Default), horizontal
+}}
+
+dateedit | timeedit
+-----------------------
+{"container": {
+	"type": "dateedit",
+	"description": "fecha de prueba",
+	"id":6,
+	"orientation": "horizontal"
+}}	
+
+
+listbox
+-----------------------
+{"container": {
+	"type": "listbox",
+	"id":14,
+	"description": "Lista desplegable despendiente 2",
+	"items":[
+	  {"id":1, "value":"Valor de prueba17", "parent":1},
+	  {"id":3, "value":"Valor de prueba18", "parent":2},
+	  {"id":4, "value":"Valor de prueba19", "parent":3}
+	]
+}}
+
+checkbox | radiobutton
+-----------------------
+{"container": {
+    "type": "checkbox",
+    "description": "Casillas de prueba",		-- Opcional(Si es nulo, el parametro "orientation" no se considera)
+    "id":8,
+    "orientation": "horizontal",				-- Opciones: vertical, horizontal
+    "itemsOrientation": "horizontal",			-- Opciones: vertical(Default), horizontal
+    "items":[
+      {"id":1, "value":"Valor de prueba1"},
+      {"id":2, "value":"Valor de prueba2", "nonconfomity":true},
+      {"id":3, "value":"Valor de prueba3"},
+      {"id":4, "value":"Valor de prueba4"}
+    ]
+}},
+
+
+	

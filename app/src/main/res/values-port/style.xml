@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="boxInput">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:padding">8dip</item>
+        <item name="android:paddingTop">16dip</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="editTextParams">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="labelParams">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+    <style name="spinnerParams">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

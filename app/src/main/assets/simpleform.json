@@ -1,0 +1,245 @@
+[
+  {
+    "container": {
+      "type": "scrolllayout",
+      "width": "match_parent",
+      "height": "match_parent",
+      "_childs": [
+        {
+          "container": {
+            "type": "textedit",
+            "description": "Campo de prueba 1",
+            "id": 3,
+            "lines": "1",
+            "inputType": "email",
+            "mandatory": true,
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "container": {
+            "type": "textedit",
+            "description": "Campo de prueba 2",
+            "id": 4,
+            "lines": "1",
+            "orientation": "vertical"
+          }
+        },
+        {
+          "container": {
+            "type": "textedit",
+            "description": "Campo de prueba 3",
+            "id": 5,
+            "lines": "1",
+            "inputType": "date",
+            "mandatory": true
+          }
+        },
+        {
+          "container": {
+            "type": "dateedit",
+            "description": "fecha de prueba",
+            "id": 6,
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "container": {
+            "type": "timeedit",
+            "description": "hora de prueba",
+            "id": 7,
+            "orientation": "horizontal"
+          }
+        },
+        {
+          "container": {
+            "type": "listbox",
+            "description": "Listado de prueba",
+            "id": 7,
+            "orientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "Valor de prueba1"
+              },
+              {
+                "id": 2,
+                "value": "Valor de prueba2",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "Valor de prueba3"
+              },
+              {
+                "id": 4,
+                "value": "Valor de prueba4"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "checkbox",
+            "description": "Casillas de prueba",
+            "id": 8,
+            "orientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "Valor de prueba1"
+              },
+              {
+                "id": 2,
+                "value": "Valor de prueba2",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "Valor de prueba3"
+              },
+              {
+                "id": 4,
+                "value": "Valor de prueba4"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "checkbox",
+            "description": "Casillas de prueba2",
+            "id": 9,
+            "itemsOrientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "prueba1"
+              },
+              {
+                "id": 2,
+                "value": "prueba2",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "prueba3"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "checkbox",
+            "id": 10,
+            "itemsOrientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "Valor de prueba5"
+              },
+              {
+                "id": 2,
+                "value": "Valor de prueba6",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "Valor de prueba7"
+              },
+              {
+                "id": 4,
+                "value": "Valor de prueba8"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "radiobutton",
+            "description": "Punto de prueba",
+            "id": 11,
+            "orientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "Valor de prueba9"
+              },
+              {
+                "id": 2,
+                "value": "Valor de prueba10",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "Valor de prueba11"
+              },
+              {
+                "id": 4,
+                "value": "Valor de prueba12"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "radiobutton",
+            "description": "Punto de prueba2",
+            "id": 12,
+            "itemsOrientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "prueba1"
+              },
+              {
+                "id": 2,
+                "value": "prueba2",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "prueba3"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "radiobutton",
+            "id": 13,
+            "itemsOrientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "Valor de prueba5"
+              },
+              {
+                "id": 2,
+                "value": "Valor de prueba6",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "Valor de prueba7"
+              },
+              {
+                "id": 4,
+                "value": "Valor de prueba8"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "switch",
+            "description": "Switch de prueba 1",
+            "valueOff": "N",
+            "valueOn": "S",
+            "id": 14
+          }
+        }
+      ]
+    }
+  }
+]
