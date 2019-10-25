@@ -121,7 +121,7 @@ checkbox | radiobutton
     "type": "checkbox",
     "description": "Casillas de prueba",		-- Opcional(Si es nulo, el parametro "orientation" no se considera)
     "id":8,
-    "orientation": "horizontal",				-- Opciones: vertical, horizontal
+    "orientation": "horizontal",				-- Opciones: vertical, horizontal(Default)
     "itemsOrientation": "horizontal",			-- Opciones: vertical(Default), horizontal
     "items":[
       {"id":1, "value":"Valor de prueba1"},

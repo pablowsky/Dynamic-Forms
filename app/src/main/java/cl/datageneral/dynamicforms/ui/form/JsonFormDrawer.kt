@@ -3,6 +3,7 @@ package cl.datageneral.dynamicforms.ui.form
 import android.content.Context
 import android.util.Log
 import android.widget.*
+import androidx.appcompat.widget.AppCompatCheckBox
 import cl.datageneral.dynamicforms.R
 
 /**
@@ -15,36 +16,41 @@ open class JsonFormDrawerImpl(val context: Context){
      * @param orientation   Orientacion de los elementos dentro del layout
      * @return LinearLayout configurado
      */
-    fun drawerRadioGroup(orientation: String?, weight: Float?): RadioGroup {
-        /*val params:LinearLayout.LayoutParams = if(weight==null){
-            Layout.p1
-        }else{
-            Layout.hWeightParam(weight)
-        }*/
+    fun drawerRadioGroup(orientation: String?, preferedOrientation: String?, weight: Float?): RadioGroup {
         return RadioGroup(context).apply {
             this.orientation   = Layout.getLayourOrientation(orientation)
-            this.layoutParams  = Layout.GroupParams(weight)
-            //Log.e("drawerGroup", weight.toString())
-            //this.setBackgroundColor(resources.getColor(R.color.iconYellow))
+            this.layoutParams  = Layout.GroupParams(weight, preferedOrientation)
+        }
+    }
+
+    /**
+     * Obtiene el LinearLayout con padding para colocar despues de un ScrollView
+     * @return LinearLayout configurado
+     */
+    fun drawerAfterScroll(): LinearLayout {
+        return LinearLayout(context).apply {
+            orientation     = LinearLayout.VERTICAL
+            layoutParams    = Layout.p3
+            setPadding(
+                Layout.scrollPadding[0],
+                Layout.scrollPadding[1],
+                Layout.scrollPadding[2],
+                Layout.scrollPadding[3]
+            )
         }
     }
 
     /**
      * Obtiene el LinearLayout que almacenara los items de CheckBox
-     * @param orientation   Orientacion de los elementos dentro del layout
+     * @param orientation           Orientacion de los elementos dentro del layout
+     * @param preferedOrientation   Orientacion preferida
+     * @param weight                Distribucion del elemento en el grupo
      * @return LinearLayout configurado
      */
-    fun drawerGroup(orientation: String?, weight: Float?): LinearLayout {
-        /*val params:LinearLayout.LayoutParams = if(weight==null){
-            Layout.p1
-        }else{
-            Layout.hWeightParam(weight)
-        }*/
+    fun drawerGroup(orientation: String?, preferedOrientation: String?, weight: Float?): LinearLayout {
         return LinearLayout(context).apply {
             this.orientation   = Layout.getLayourOrientation(orientation)
-            this.layoutParams  = Layout.GroupParams(weight)
-            //Log.e("drawerGroup", weight.toString())
-            //this.setBackgroundColor(resources.getColor(R.color.iconYellow))
+            this.layoutParams  = Layout.GroupParams(weight, preferedOrientation)
         }
     }
 
@@ -67,7 +73,12 @@ open class JsonFormDrawerImpl(val context: Context){
         return LinearLayout(context).apply {
             this.orientation   = Layout.getLayourOrientation(preferedOrientation)
             this.layoutParams  = Layout.BoxParams()
-            //this.setBackgroundColor(resources.getColor(R.color.iconYellow))
+            setPadding(
+                Layout.boxPadding[0],
+                Layout.boxPadding[1],
+                Layout.boxPadding[2],
+                Layout.boxPadding[3]
+            )
         }
     }
 
@@ -95,13 +106,13 @@ open class JsonFormDrawerImpl(val context: Context){
      */
     fun drawerListbox(preferedOrientation: String?, weight: Float=2.0f): Spinner {
         return Spinner(context).apply {
-            setBackgroundResource(R.color.iconYellow) // Temporal
-            /*setPadding(
-                spinnerPadding[0],
-                spinnerPadding[1],
-                spinnerPadding[2],
-                spinnerPadding[3]
-            )*/
+            //setBackgroundResource(R.color.iconYellow) // Temporal
+            setPadding(
+                Layout.spinnerPadding[0],
+                Layout.spinnerPadding[1],
+                Layout.spinnerPadding[2],
+                Layout.spinnerPadding[3]
+            )
             layoutParams = Layout.EditTextParams(preferedOrientation, context, weight)
         }
     }
@@ -144,8 +155,9 @@ open class JsonFormDrawerImpl(val context: Context){
      * @param   weight                  Distribucion del elemento en el conjunto
      * @return EdiText configurado
      */
-    fun drawerCheckBox(id:Int, value: String, weight: Float?): CheckBox {
-        return CheckBox(context).apply {
+    fun drawerCheckBox(id:Int, value: String, weight: Float?): AppCompatCheckBox {
+        //AppCompatCheckBox(context)
+        return AppCompatCheckBox(context).apply {
             text            = value
             tag             = id
             layoutParams    = Layout.CheckBoxParams(weight)
@@ -164,6 +176,25 @@ open class JsonFormDrawerImpl(val context: Context){
             text            = value
             tag             = id
             layoutParams    = Layout.CheckBoxParams(weight)
+        }
+    }
+
+    /**
+     * Obtiene un TextView de tipo titulo
+     * @param   id                      Id
+     * @param   description                   Texto a mostrar
+     * @return  TextView configurado
+     */
+    fun drawerTitle(id:Int, description: String): TextView {
+        return TextView(context).apply {
+            text = description
+            setTextAppearance(context, R.style.labelTitle)
+            layoutParams = Layout.p2
+            setPadding(
+                Layout.titlePadding[0],
+                Layout.titlePadding[1],
+                Layout.titlePadding[2],
+                Layout.titlePadding[3])
         }
     }
 }

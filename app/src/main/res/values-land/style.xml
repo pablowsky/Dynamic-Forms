@@ -9,10 +9,5 @@
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="editTextParams">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
-    <style name="labelParams">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
+
 </resources>

@@ -27,15 +27,16 @@ class Layout {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT
         )
-        /*val p3 = LinearLayout.LayoutParams(
-            0,
-            LinearLayout.LayoutParams.WRAP_CONTENT,
-            1.0f
-        )*/
+
+        var scrollPadding 	= arrayOf(16,16,16,16)
+        var spinnerPadding 	= arrayOf(8,8,8,8)
+        var boxPadding 		= arrayOf(0,16,0,16)
+        var titlePadding 	= arrayOf(0, 16, 0, 24)
+
 
         // object
-        fun GroupParams(weight: Float?): LinearLayout.LayoutParams {
-            return if(weight==null){
+        fun GroupParams(weight: Float?, preferedOrientation: String?): LinearLayout.LayoutParams {
+            return if(weight==null || preferedOrientation=="vertical"){
                 p1
             }else{
                 hWeightParam(weight)
@@ -50,24 +51,6 @@ class Layout {
                 hWeightParam(weight)
             }
         }
-
-        /*// object
-        fun GroupParams(
-            preferedOrientation: String?,
-            context: Context,
-            weight: Float=2.0f
-        ): LinearLayout.LayoutParams {
-            var orientation = preferedOrientation
-            if (preferedOrientation.isNullOrEmpty()) {
-                orientation = procOrientation(context)
-            }
-            Log.e("EditTextParams", orientation)
-            return if (orientation == "vertical") {
-                p2
-            } else {
-                hWeightParam(weight)
-            }
-        }*/
 
         // object
         fun EditTextParams(

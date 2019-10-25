@@ -5,6 +5,11 @@
       "width": "match_parent",
       "height": "match_parent",
       "_childs": [
+        {"container": {
+          "type": "title",
+          "description": "Titulo Campos de texto de prueba",
+          "id":6
+        }},
         {
           "container": {
             "type": "textedit",
@@ -51,6 +56,11 @@
             "orientation": "horizontal"
           }
         },
+        {"container": {
+          "type": "title",
+          "description": "Titulo Listados de prueba",
+          "id":6
+        }},
         {
           "container": {
             "type": "listbox",
@@ -78,6 +88,11 @@
             ]
           }
         },
+        {"container": {
+          "type": "title",
+          "description": "Titulo Casillas de prueba",
+          "id":6
+        }},
         {
           "container": {
             "type": "checkbox",
@@ -124,6 +139,30 @@
               {
                 "id": 3,
                 "value": "prueba3"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "checkbox",
+            "description": "Casillas de prueba3",
+            "id": 15,
+            "orientation": "vertical",
+            "itemsOrientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "prueba4"
+              },
+              {
+                "id": 2,
+                "value": "prueba5",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "prueba6"
               }
             ]
           }
@@ -200,6 +239,30 @@
               {
                 "id": 3,
                 "value": "prueba3"
+              }
+            ]
+          }
+        },
+        {
+          "container": {
+            "type": "radiobutton",
+            "description": "Punto de prueba3",
+            "id": 16,
+            "orientation": "vertical",
+            "itemsOrientation": "horizontal",
+            "items": [
+              {
+                "id": 1,
+                "value": "prueba4"
+              },
+              {
+                "id": 2,
+                "value": "prueba5",
+                "nonconfomity": true
+              },
+              {
+                "id": 3,
+                "value": "prueba6"
               }
             ]
           }

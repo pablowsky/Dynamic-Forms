@@ -10,10 +10,7 @@
     </style>
 
     <style name="editTextParams">
-        <item name="android:textColor">@color/colorAccent</item>
-    </style>
-    <style name="labelParams">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/colorBlack_2</item>
     </style>
     <style name="spinnerParams">
         <item name="android:textColor">@color/colorAccent</item>

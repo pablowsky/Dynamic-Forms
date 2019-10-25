@@ -20,8 +20,8 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
     private var baseLayout = LinearLayout(context)
 
-    private val contBoxes       = arrayOf("linearlayout","scrolllayout","cardbox")
-    private val contWidgets     = arrayOf("textedit","dateedit","timeedit","listbox","checkbox","radiobutton","button")
+    private val contBoxes       = arrayOf("linearlayout","afterscroll","scrolllayout","cardbox")
+    private val contWidgets     = arrayOf("textedit","dateedit","timeedit","listbox","checkbox","radiobutton","button","title")
     private val contSpecials    = arrayOf("tablayout","tabitem")
     private val contPredefined  = arrayOf("add_items","check_items","pictures_gallery")
 
@@ -77,34 +77,26 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
         val container   = Json.getObject(obj, "container")
         val childs      = Json.getArray(obj, "_childs")
 
-
-        Log.e("extractObj","obj:$obj")
-
         val c:View? = when(getType(type)){
             ContainerType.BOX ->{
-                Log.e("extractObj","BOX")
-                var linear = someProc("linearlayout", obj)
+                var linear = someProc("afterscroll", obj)
                 if(childs!=null){
                     val size = childs.length()
                     for (a in 0 until size){
-                        val sobj = childs.getJSONObject(a)
-                        val cChild   = Json.getObject(sobj, "container")
-
-                        linear = extractObj(cChild!!, linear)
+                        val sobj    = childs.getJSONObject(a)
+                        val cChild  = Json.getObject(sobj, "container")
+                        linear      = extractObj(cChild!!, linear)
                     }
                 }
                 val scroll = someProc(type, obj)
                 add(scroll, linear)
             }
             ContainerType.WIDGET -> {
-                Log.e("extractObj","WIDGET")
-                someProc(type, obj)
+                procWidget(type, obj)
             }
             /*ContainerType.SPECIAL ->
             ContainerType.PREDEFINED ->*/
             else -> {
-                Log.e("extractObj","No se pudo detectar el tipo")
-                //View(context)
                 null
             }
         }
@@ -113,133 +105,19 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
         }else{
             add(parentView, c)
         }
-        //return add(parentView, c)
     }
 
-    /*fun some(obj:JSONObject, parentView: View):View {
-        val type = Json.getText(obj, "type")
-        val child = someProc(type, obj)
-        return add(parentView, child)
-    }*/
     private fun someProc(type:String, obj: JSONObject?):View?{
-        val width           = Json.getText(obj, "width")// Obsoleto
-        val height          = Json.getText(obj, "height")// Obsoleto
-        val mOrientation    = Json.getText(obj, "orientation")// Obsoleto
-        val objOrientation  = getOrientationParam(mOrientation)// Obsoleto
-        val objParamsLayout = getLayoutParams(width, height) // Obsoleto
-
-        //val drawer = JsonFormDrawer(context)
-        Log.e("someProc", type+"--"+obj.toString())
 
         return when(type){
             "boxInput"  -> {
                 drawerBoxInput(null)
             }
-            "linearlayout"  -> {
-                LinearLayout(context).apply {
-                    orientation     = LinearLayout.VERTICAL
-                    layoutParams    = Layout.p3
-                }
+            "afterscroll"  -> {
+                drawerAfterScroll()
             }
             "scrolllayout"  -> {
                 drawerScroll()
-            }
-            "textedit"       -> {
-                val lines           = Json.getInt(obj, "lines", 1)
-                val description     = Json.getText(obj, "description")
-                val preOrientation  = getOrientation(obj, "orientation", true)
-                val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.editTextParams, preOrientation)
-                val edittext        = drawerEditText(lines, R.style.editTextParams, preOrientation)
-                add(box, label)
-                add(box, edittext)
-            }
-            "dateedit"       -> {
-                val description     = Json.getText(obj, "description")
-                val preOrientation  = getOrientation(obj, "orientation", true)
-                val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.editTextParams, preOrientation, 2.0f)
-                val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
-                val image           = drawerImage(R.drawable.ic_datepicker, preOrientation, 1.0f)
-                add(box, label)
-                add(box, edittext)
-                add(box, image)
-            }
-            "timeedit"       -> {
-                val description     = Json.getText(obj, "description")
-                val preOrientation  = getOrientation(obj, "orientation", true)
-                val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.editTextParams, preOrientation, 2.0f)
-                val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
-                val image           = drawerImage(R.drawable.ic_timepicker, preOrientation, 1.0f)
-                add(box, label)
-                add(box, edittext)
-                add(box, image)
-            }
-            "label"       -> {
-                val description = Json.getText(obj, "description")
-                drawerLabel(description, R.style.editTextParams, null)
-            }
-            "listbox"       -> {
-                val description     = Json.getText(obj, "description")
-                val spinnerArray    = getSelectableItems(obj, "items")
-                val preOrientation  = getOrientation(obj, "orientation", true)
-                val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.editTextParams, preOrientation)
-                val spinner         = drawerListbox(preOrientation)
-                LoadSpin(context, spinner).run {
-                    setData(spinnerArray)
-                    selectedItemStyle = R.style.spinnerParams
-                    Load()
-                }
-                add(box, label)
-                add(box, spinner)
-            }
-            "checkbox"      -> {
-                val description     = Json.getText(obj, "description")
-                val itemsArray      = getSelectableItems(obj, "items")
-                val preOrientation  = getOrientation(obj, "orientation", false)
-                var itemsOrientation = Json.getText(obj, "itemsOrientation")
-                val box             = drawerBoxInput(preOrientation)
-                if(description.isNotEmpty()) {
-                    val label = drawerLabel(description, R.style.editTextParams, preOrientation)
-                    add(box, label)
-                }
-                if(itemsOrientation.isEmpty()){
-                    itemsOrientation = "vertical"
-                }
-                val group           = drawerGroup(itemsOrientation, 2.0f)
-                for(item in itemsArray){
-                    group.addView(drawerCheckBox(item.id, item.value!!, null))
-                }
-                add(box, group)
-            }
-            "radiobutton"      -> {
-                val description     = Json.getText(obj, "description")
-                val itemsArray      = getSelectableItems(obj, "items")
-                val preOrientation  = getOrientation(obj, "orientation", false)
-                var itemsOrientation = Json.getText(obj, "itemsOrientation")
-                val box             = drawerBoxInput(preOrientation)
-                if(description.isNotEmpty()) {
-                    val label = drawerLabel(description, R.style.editTextParams, preOrientation)
-                    add(box, label)
-                }
-                if(itemsOrientation.isEmpty()){
-                    itemsOrientation = "vertical"
-                }
-                val group           = drawerRadioGroup(itemsOrientation, 2.0f)
-                for(item in itemsArray){
-                    group.addView(drawerRadioButton(item.id, item.value!!, null))
-                }
-                add(box, group)
-            }
-            "switch"    -> {
-                val description     = Json.getText(obj, "description")
-                Switch(context).apply {
-                    this.text       = description
-                    this.textOff    = Json.getText(obj, "textOff")
-                    this.textOn     = Json.getText(obj, "textOn")
-                }
             }
             "tabitem"       -> {
                 TabItem(context)
@@ -250,6 +128,107 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
             "add_items"     -> View(context)
             "check_items"   -> View(context)
             "pictures_gallery" -> View(context)
+            "button"        -> {
+                Button(context)
+            }
+            else -> View(context)
+        }
+    }
+
+    private fun procWidget(type:String, obj: JSONObject?):View?{
+        val description     = Json.getText(obj, "description")
+        val id              = Json.getInt(obj, "id", 0)
+        return when(type){
+            "title"       -> {
+                drawerTitle(id, description)
+            }
+            "textedit"       -> {
+                val lines           = Json.getInt(obj, "lines", 1)
+                val preOrientation  = getOrientation(obj, "orientation", true)
+                val box             = drawerBoxInput(preOrientation)
+                val label           = drawerLabel(description, R.style.labelParams, preOrientation)
+                val edittext        = drawerEditText(lines, R.style.editTextParams, preOrientation)
+                add(box, label)
+                add(box, edittext)
+            }
+            "dateedit"       -> {
+                val preOrientation  = getOrientation(obj, "orientation", true)
+                val box             = drawerBoxInput(preOrientation)
+                val label           = drawerLabel(description, R.style.labelParams, preOrientation, 2.0f)
+                val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
+                val image           = drawerImage(R.drawable.ic_datepicker, preOrientation, 1.0f)
+                add(box, label)
+                add(box, edittext)
+                add(box, image)
+            }
+            "timeedit"       -> {
+                val preOrientation  = getOrientation(obj, "orientation", true)
+                val box             = drawerBoxInput(preOrientation)
+                val label           = drawerLabel(description, R.style.labelParams, preOrientation, 2.0f)
+                val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
+                val image           = drawerImage(R.drawable.ic_timepicker, preOrientation, 1.0f)
+                add(box, label)
+                add(box, edittext)
+                add(box, image)
+            }
+            "label"       -> {
+                drawerLabel(description, R.style.labelParams, null)
+            }
+            "listbox"       -> {
+                val spinnerArray    = getSelectableItems(obj, "items")
+                val preOrientation  = getOrientation(obj, "orientation", true)
+                val box             = drawerBoxInput(preOrientation)
+                val label           = drawerLabel(description, R.style.labelParams, preOrientation)
+                val spinner         = drawerListbox(preOrientation)
+                LoadSpin(context, spinner).run {
+                    setData(spinnerArray)
+                    selectedItemStyle = R.style.spinnerParams
+                    Load()
+                }
+                add(box, label)
+                add(box, spinner)
+            }
+            "checkbox"      -> {
+                val itemsArray      = getSelectableItems(obj, "items")
+                val preOrientation  = getOrientation(obj, "orientation", "horizontal")
+                val itemsOrientation= getOrientation(obj, "itemsOrientation", false)
+                val box             = drawerBoxInput(preOrientation)
+                var weigth:Float?   = null
+                if(description.isNotEmpty()) {
+                    val label = drawerLabel(description, R.style.labelParams, preOrientation)
+                    add(box, label)
+                    weigth = 2.0f
+                }
+                val group           = drawerGroup(itemsOrientation, preOrientation, weigth)
+                for(item in itemsArray){
+                    group.addView(drawerCheckBox(item.id, item.value!!, null))
+                }
+                add(box, group)
+            }
+            "radiobutton"      -> {
+                val itemsArray      = getSelectableItems(obj, "items")
+                val preOrientation  = getOrientation(obj, "orientation", "horizontal")
+                val itemsOrientation= getOrientation(obj, "itemsOrientation", false)
+                val box             = drawerBoxInput(preOrientation)
+                var weigth:Float?   = null
+                if(description.isNotEmpty()){
+                    val label = drawerLabel(description, R.style.editTextParams, preOrientation)
+                    add(box, label)
+                    weigth = 2.0f
+                }
+                val group           = drawerRadioGroup(itemsOrientation, preOrientation, weigth)
+                for(item in itemsArray){
+                    group.addView(drawerRadioButton(item.id, item.value!!, null))
+                }
+                add(box, group)
+            }
+            "switch"    -> {
+                Switch(context).apply {
+                    this.text       = description
+                    this.textOff    = Json.getText(obj, "textOff")
+                    this.textOn     = Json.getText(obj, "textOn")
+                }
+            }
             "button"        -> {
                 Button(context)
             }
@@ -277,16 +256,14 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
             orientation
         }
     }
-    private fun getOpposite(direction:String):String{
-        return if(direction=="vertical"){
-            "horizontal"
+    private fun getOrientation(obj: JSONObject?, key:String, default:String):String{
+        val orientation     = Json.getText(obj, key)
+        return if (orientation.isEmpty()) {
+            default
         }else{
-            "vertical"
+            orientation
         }
     }
-
-
-
 
     fun getType(type:String):ContainerType?{
         var resp:ContainerType? = null
@@ -324,84 +301,6 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
             }
         }
         return parentView
-    }
-
-    @Deprecated("Funcion implementada en JsonFormDrawer")
-    fun getOrientationParam(orientation: String):Int{
-        return when(orientation){
-            "vertical"      -> LinearLayout.VERTICAL
-            "horizontal"    -> LinearLayout.HORIZONTAL
-            else -> LinearLayout.HORIZONTAL
-        }
-    }
-
-    @Deprecated("Funcion implementada en JsonFormDrawer")
-    fun getLayoutParams(width:String, height:String):LinearLayout.LayoutParams{
-        val objWidth = when(width){
-            "match_parent"  -> LinearLayout.LayoutParams.MATCH_PARENT
-            "wrap_content"  -> LinearLayout.LayoutParams.WRAP_CONTENT
-            else -> LinearLayout.LayoutParams.WRAP_CONTENT
-        }
-
-        val objHeight = when(height){
-            "match_parent"  -> LinearLayout.LayoutParams.MATCH_PARENT
-            "wrap_content"  -> LinearLayout.LayoutParams.WRAP_CONTENT
-            else -> LinearLayout.LayoutParams.WRAP_CONTENT
-        }
-
-        return LinearLayout.LayoutParams(objWidth, objHeight )
-    }
-
-    @Deprecated("Funcion implementada en JsonFormDrawer")
-    fun getLayoutParams(type: String):LinearLayout.LayoutParams{
-        return when(type){
-            "label"  -> LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f
-            )
-            "textedit"       -> LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                2.0f
-            )
-            "spinner"       -> LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                2.0f
-            )
-            "checkbox"      -> LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f
-            )
-            "radiogroup"    -> LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                2.0f
-            )
-            "radiobutton"   -> LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1.0f
-            )
-            /*"tabitem"       -> {
-                TabItem(context)
-            }
-            "tablayout"     -> {
-                TabLayout(context)
-            }
-            "add_items"     -> View(context)
-            "check_items"   -> View(context)
-            "pictures_gallery" -> View(context)
-            "button"        -> {
-                Button(context)
-            }*/
-            else -> LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-        }
     }
 }
 
