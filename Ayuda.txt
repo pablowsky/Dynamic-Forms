@@ -1,36 +1,79 @@
 ||    Acciones:
 --------------------------------------------------------------------------------------------------------------
 "actions":[
-	{"actionType":"show",			"containerId":"x"},
-	{"actionType":"hide",			"containerId":"x"},
-	{"actionType":"disable",		"containerId":"x"},
-	{"actionType":"enable",			"containerId":"x"},
-	{"actionType":"set",			"containerId":"x", 	"itemId":1},
-	{"actionType":"unset",			"containerId":"x", 	"itemId":1}, -- si itemId esta vacio se descheckeq todos los items de containerId o se elimina el texto
-	{"actionType":"addMandatory",	"containerId":"x"},
-	{"actionType":"rmMandatory",	"containerId":"x"},
+	{"action":{"type":"show",			"containerId":"x"}},
+	{"action":{"type":"hide",			"containerId":"x"}},
+	{"action":{"type":"disable",		"containerId":"x"}},
+	{"action":{"type":"enable",			"containerId":"x"}},
+	{"action":{"type":"set",			"containerId":"x", 	"itemId":1}},
+	{"action":{"type":"unset",			"containerId":"x", 	"itemId":1}}, -- si itemId esta vacio se descheckeq todos los items de containerId o se elimina el texto
+	{"action":{"type":"addMandatory",	"containerId":"x"}},
+	{"action":{"type":"rmMandatory",	"containerId":"x"}},
+	{"action":{"type":"open",			"containerId":"x", 		"predefined"="selec_date"}}
 ]
 
 
 ||    Eventos:
 --------------------------------------------------------------------------------------------------------------
+"change":
+	-- Aplica a: "checkbox", "radiobutton", "switch", "textedit"
+	-- Condiciones ("checkbox", "radiobutton", "textedit"): 
+		this.valor 		==	[valor1, valor2, valor3]	-- ET
+		this.valor 		!= 	[valor1, valor2, valor3]	-- NE
+		this.valor 		> 	valor1						-- GT
+		this.valor 		<	valor1						-- LT
+	-- Actiones posibles: "show", "hide", "disable", "enable", "set", "unset", "open"
+	
+"click"
+	-- Aplica a: "dateedit", "timeedit", "listbox", "button"
+	-- Actiones posibles: "show", "hide", "disable", "enable", "set", "unset", "open"
+	
+"load"
+	-- Aplica a: "linearlayout", "scrollform"
+	-- Actiones posibles: "show", "hide", "disable", "enable", "set", "unset", "open"
 
 
-||    Tipos de Contenedores:
---------------------------------------------------------------------------------------------------------------
-"type": "linearlayout"
-"type": "scrolllayout"
-"type": "editext"
-"type": "listbox"
-"type": "checkbox"
-"type": "radiobutton"
-"type": "tabitem"
-"type": "add_items"
-"type": "check_items"
-"type": "pictures_gallery"
-"type": "button"
+
+Ejemplos:
+
+Ventana de fecha:
+"event":{
+	"type":	"change",
+	"actions"[
+		"action":{"type":"open", "predefined"="selec_date"}
+	]
+}
+
+"event":{
+	"type":	"change",
+	"conditions": {"condition":"ET", "value":"", "items":["","",""]},
+	"actions":[
+		{"action":{"type":"disable", "containerId":"x"}},
+		{"action":{"type":"disable", "containerId":"x"}}
+	]
+}
 
 
+
+Clases
+JFormEvent{
+	idView
+	type
+	actions	List<Action>
+	enum class Types{"change", "click", "load"}
+}
+JFormCondition{
+	valor0
+	condition:Types
+	valor1
+	result:Boolean	
+	enum class Types{ET NE, GT, LT}
+}
+JFormAction{	
+	containerId
+	predefined
+	enum class Types{"show","hide","disable","enable","set","unset","addMandatory","rmMandatory","open"}	
+}
 
 ||    Tipo de uso:
 --------------------------------------------------------------------------------------------------------------
@@ -56,7 +99,7 @@ Para v2
 --------------------------------------------------------------------------------------------------------------
 -- Boxes
 "linearlayout"
-"scrolllayout"
+"scrollform"
 "cardbox"
 
 -- Widgets
@@ -67,6 +110,7 @@ Para v2
 "checkbox"
 "radiobutton"
 "button"
+"switch"
 
 -- Specials
 "tablayout"
@@ -76,6 +120,8 @@ Para v2
 "add_items"
 "check_items"
 "pictures_gallery"
+"select_date" -- Reservado para "dateedit"
+"select_time" -- Reservado para "timeedit"
 
 ||    Descripcion de elementos:
 --------------------------------------------------------------------------------------------------------------
@@ -101,6 +147,14 @@ dateedit | timeedit
 	"orientation": "horizontal"
 }}	
 
+
+title
+-----------------------
+{"container": {
+	"type": "title",
+	"description": "Titulo de Prueba",
+	"id":6
+}}	
 
 listbox
 -----------------------
@@ -131,5 +185,27 @@ checkbox | radiobutton
     ]
 }},
 
+
+
+
+
+
+
+
+// Antiguo no considerar
+// Antiguo no considerar
+||    Tipos de Contenedores: // Antiguo no considerar
+--------------------------------------------------------------------------------------------------------------
+"type": "linearlayout"
+"type": "scrollform"
+"type": "editext"
+"type": "listbox"
+"type": "checkbox"
+"type": "radiobutton"
+"type": "tabitem"
+"type": "add_items"
+"type": "check_items"
+"type": "pictures_gallery"
+"type": "button"
 
 	

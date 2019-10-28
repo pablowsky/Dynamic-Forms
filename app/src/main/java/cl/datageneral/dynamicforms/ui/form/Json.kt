@@ -59,6 +59,23 @@ object Json {
         return value
     }
 
+    // text
+    fun getBoolean(mainObject: JSONObject?, key: String): Boolean {
+        var value = false
+        if(mainObject!=null) {
+            try {
+                if (mainObject.has(key))
+                    value = mainObject.getBoolean(key)
+                //else
+                //     return "";
+            } catch (e: JSONException) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace()
+            }
+        }
+        return value
+    }
+
     // toObject
     fun getObject(responseStr: String): JSONObject? {
         var mainObject: JSONObject? = null

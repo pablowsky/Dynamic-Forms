@@ -23,7 +23,7 @@ class DataManager(val query: Query){
 
 
 	/*fun getSessionStatus():SessionStatus{
-		val status = sPrefs.get("USER_SESSION_STATUS")
+		val status = sPrefs.getInt("USER_SESSION_STATUS")
 		return when(status){
 			"1" -> SessionStatus.LOGGED_IN
 			"2" -> SessionStatus.FIRST_USE
@@ -42,11 +42,11 @@ class DataManager(val query: Query){
 	}
 
 	fun getUser():String{
-		return sPrefs.get("USER_SESSION_USERNAME")!!
+		return sPrefs.getInt("USER_SESSION_USERNAME")!!
 	}
 
 	fun getPassword():String{
-		return sPrefs.get("USER_SESSION_PASSWORD")!!
+		return sPrefs.getInt("USER_SESSION_PASSWORD")!!
 	}*/
 
 	fun setUser(value:String){

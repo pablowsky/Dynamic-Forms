@@ -1,7 +1,7 @@
 [
   {
     "container": {
-      "type": "scrolllayout",
+      "type": "scrollform",
       "width": "match_parent",
       "height": "match_parent",
       "_childs": [
@@ -272,6 +272,14 @@
             "type": "radiobutton",
             "id": 13,
             "itemsOrientation": "horizontal",
+            "event":{
+              "type": "change",
+              "conditions": {"condition":"ET", "value":"", "items":[2,4]},
+              "actions":[
+                {"action":{"type":"disable", "containerId":"x"}},
+                {"action":{"type":"disable", "containerId":"x"}}
+              ]
+            },
             "items": [
               {
                 "id": 1,

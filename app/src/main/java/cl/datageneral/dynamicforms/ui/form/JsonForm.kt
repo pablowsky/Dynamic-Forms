@@ -1,10 +1,8 @@
 package cl.datageneral.dynamicforms.ui.form
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.core.view.get
 import cl.datageneral.dynamicforms.R
 import cl.datageneral.dynamicforms.ui.form.spinner.LoadSpin
 import cl.datageneral.dynamicforms.ui.form.spinner.SelectableItem
@@ -20,10 +18,12 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
     private var baseLayout = LinearLayout(context)
 
-    private val contBoxes       = arrayOf("linearlayout","afterscroll","scrolllayout","cardbox")
+    private val contBoxes       = arrayOf("linearlayout","afterscroll","scrollform","cardbox")
     private val contWidgets     = arrayOf("textedit","dateedit","timeedit","listbox","checkbox","radiobutton","button","title")
     private val contSpecials    = arrayOf("tablayout","tabitem")
     private val contPredefined  = arrayOf("add_items","check_items","pictures_gallery")
+
+    val mandatoryFields:ArrayList<View>? = ArrayList()
 
     fun getFields():View{
         baseLayout = LinearLayout(context)
@@ -33,27 +33,8 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
             val obj         = jsonArray.getJSONObject(a)
             val container   = Json.getObject(obj,"container")
 
-            /*Log.e("obj", obj.toString())
-            Log.e("container", container.toString())*/
-
             extractObj(container!!, mainLayout)
-            //val usage       = Json.getText(container!!,"usage")
-
-           // if(usage == "main" ){
-            //    mv = extractObj(obj, mainLayout)
-            //}
         }
-
-
-
-        /*val a = baseLayout.childCount
-        Log.e("childCount1", "-$a")
-        if(mainLayout is LinearLayout) {
-            for(b in 0 until a){
-                val v = baseLayout.getChildAt(a)
-                mainLayout.addView(v)
-            }
-        }*/
         return mainLayout
     }
 
@@ -116,7 +97,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
             "afterscroll"  -> {
                 drawerAfterScroll()
             }
-            "scrolllayout"  -> {
+            "scrollform"  -> {
                 drawerScroll()
             }
             "tabitem"       -> {
@@ -138,7 +119,8 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
     private fun procWidget(type:String, obj: JSONObject?):View?{
         val description     = Json.getText(obj, "description")
         val id              = Json.getInt(obj, "id", 0)
-        return when(type){
+        val mandatory       = Json.getBoolean(obj, "mandatory")
+        val widget = when(type){
             "title"       -> {
                 drawerTitle(id, description)
             }
@@ -233,7 +215,19 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 Button(context)
             }
             else -> View(context)
+        }?.apply {
+            if(id!=0) {
+                setId(id)
+            }
+            if(mandatory){
+                mandatoryFields?.add(this)
+            }
         }
+        return widget
+    }
+
+    private fun getEvent(obj: JSONObject?){
+
     }
 
     private fun getSelectableItems(obj: JSONObject?, key:String):ArrayList<SelectableItem>{
@@ -306,4 +300,18 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
 enum class ContainerType{
     BOX, WIDGET, SPECIAL, PREDEFINED
+}
+
+enum class JsonEvents{
+    OMCHANGE, ONCLICK, ONLOAD
+}
+
+enum class JsonActions{
+    SHOW, HIDE, OPEN, SET
+}
+
+
+
+class MyEvent(){
+
 }
