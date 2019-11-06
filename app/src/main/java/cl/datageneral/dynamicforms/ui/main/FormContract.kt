@@ -1,7 +1,7 @@
 package cl.datageneral.dynamicforms.ui.main
 
 import cl.datageneral.dynamicforms.ui.base.BaseContract
-import cl.datageneral.dynamicforms.ui.form.spinner.SelectableItem
+import pablo.molina.jsonform.spinner.SelectableItem
 import org.json.JSONArray
 
 /**

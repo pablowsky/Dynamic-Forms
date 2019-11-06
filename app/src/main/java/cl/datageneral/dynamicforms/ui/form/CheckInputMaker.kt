@@ -3,7 +3,7 @@ package cl.datageneral.dynamicforms.ui.form
 import android.content.Context
 import android.content.res.Configuration
 import android.widget.*
-import cl.datageneral.dynamicforms.ui.form.spinner.SelectableItem
+import pablo.molina.jsonform.spinner.SelectableItem
 
 /**
  * Created by Pablo Molina on 11-10-2019. s.pablo.molina@gmail.com

@@ -45,7 +45,11 @@
             "type": "dateedit",
             "description": "fecha de prueba",
             "id": 6,
-            "orientation": "horizontal"
+            "orientation": "horizontal",
+            "event":{
+                  "type":	"click",
+                  "actions":[{"action":{"type":"open", "predefined":"select_date"}}]
+            }
           }
         },
         {
@@ -53,7 +57,22 @@
             "type": "timeedit",
             "description": "hora de prueba",
             "id": 7,
-            "orientation": "horizontal"
+            "orientation": "horizontal",
+            "event":{
+              "type":	"click",
+              "actions":[{"action":{"type":"open", "predefined":"select_time"}}]
+            }
+          }
+        },
+        {
+          "container": {
+            "type": "button",
+            "description": "boton de prueba",
+            "id": 17,
+            "event":{
+              "type":	"click",
+              "actions":[{"action":{"type":"disable", "containerId":4}}]
+            }
           }
         },
         {"container": {

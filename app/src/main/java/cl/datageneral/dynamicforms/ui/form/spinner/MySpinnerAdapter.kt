@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.TextView
+import pablo.molina.jsonform.spinner.SelectableItem
 
 class MySpinnerAdapter(
 		context: Context,

@@ -46,7 +46,7 @@ Ventana de fecha:
 
 "event":{
 	"type":	"change",
-	"conditions": {"condition":"ET", "value":"", "items":["","",""]},
+	"conditions": {"condition":"ET", "value":"", "items":[2,4]},
 	"actions":[
 		{"action":{"type":"disable", "containerId":"x"}},
 		{"action":{"type":"disable", "containerId":"x"}}

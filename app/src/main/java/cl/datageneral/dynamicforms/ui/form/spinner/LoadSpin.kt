@@ -4,6 +4,8 @@ import android.R
 import android.content.Context
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.Spinner
+import pablo.molina.jsonform.spinner.MySpinnerAdapter
+import pablo.molina.jsonform.spinner.SelectableItem
 
 import java.util.ArrayList
 

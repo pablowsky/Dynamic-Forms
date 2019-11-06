@@ -132,6 +132,20 @@ open class JsonFormDrawerImpl(val context: Context){
         }
     }
 
+
+    /**
+     * Obtiene el EdiText
+     * @param description           Texto del Texview
+     * @param style                 Estilo a aplicar al Texview Ejm.: R.style.mystyle
+     * @param preferedOrientation   Orientacion preferida
+     * @return EdiText configurado
+     */
+    fun drawerButton(): TextView {
+        return Button(context).apply {
+            layoutParams = Layout.p3
+        }
+    }
+
     /**
      * Obtiene el ImageView
      * @param   src                     Imagen a mostrar

@@ -1,4 +1,4 @@
-package cl.datageneral.dynamicforms.ui.form
+package pablo.molina.jsonform
 
 import org.json.JSONArray
 import org.json.JSONException
@@ -101,5 +101,17 @@ object Json {
             }
         }
         return r1
+    }
+
+    fun has(mainObject: JSONObject?, key: String):Boolean{
+        var r = false
+        if(mainObject!=null) {
+            try {
+                r = mainObject.has(key)
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        return r
     }
 }

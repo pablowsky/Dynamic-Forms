@@ -5,8 +5,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Spinner
 import cl.datageneral.dynamicforms.R
-import cl.datageneral.dynamicforms.ui.form.spinner.LoadSpin
-import cl.datageneral.dynamicforms.ui.form.spinner.SelectableItem
+import pablo.molina.jsonform.spinner.LoadSpin
+import pablo.molina.jsonform.spinner.SelectableItem
 
 
 /**
@@ -16,7 +16,7 @@ class ListInputMaker(val label:String?, val  items:ArrayList<SelectableItem>, va
 	var baseLayout 				= LinearLayout(context)
 	var labelObj: TextView? 	= null
 	var spinner: Spinner? 		= null
-	var defaultItem:SelectableItem?= null
+	var defaultItem: SelectableItem?= null
 
 	fun getObject(): LinearLayout {
 		pBox()
