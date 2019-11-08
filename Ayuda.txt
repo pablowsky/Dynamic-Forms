@@ -9,7 +9,7 @@
 	{"action":{"type":"unset",			"containerId":"x", 	"itemId":1}}, -- si itemId esta vacio se descheckeq todos los items de containerId o se elimina el texto
 	{"action":{"type":"addMandatory",	"containerId":"x"}},
 	{"action":{"type":"rmMandatory",	"containerId":"x"}},
-	{"action":{"type":"open",			"containerId":"x", 		"predefined"="selec_date"}}
+	{"action":{"type":"open",			"containerId":"x", 		"predefined"="select_date"}}
 ]
 
 
@@ -38,9 +38,9 @@ Ejemplos:
 
 Ventana de fecha:
 "event":{
-	"type":	"change",
+	"type":	"click",
 	"actions"[
-		"action":{"type":"open", "predefined"="selec_date"}
+		"action":{"type":"open", "predefined"="select_date"}
 	]
 }
 
