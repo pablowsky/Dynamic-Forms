@@ -1,2 +1,2 @@
-include ':app', ':jform', ':jsonform'
+include ':app', ':jsonform'
 rootProject.name='Dynamic Forms'

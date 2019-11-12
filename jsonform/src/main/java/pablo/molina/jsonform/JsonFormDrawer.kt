@@ -3,11 +3,18 @@ package pablo.molina.jsonform
 import android.content.Context
 import android.widget.*
 import androidx.appcompat.widget.AppCompatCheckBox
+import pablo.molina.jsonform.widgets.PmCheckBox
 
 /**
  * Created by Pablo Molina on 17-10-2019. s.pablo.molina@gmail.com
  */
 open class JsonFormDrawerImpl(val context: Context){
+    var currId = 1
+
+
+    fun getLayoutId():Int{
+        return currId++
+    }
 
     /**
      * Obtiene el RadioGroup que almacenara los items de CheckBox
@@ -18,6 +25,7 @@ open class JsonFormDrawerImpl(val context: Context){
         return RadioGroup(context).apply {
             this.orientation   = Layout.getLayourOrientation(orientation)
             this.layoutParams  = Layout.GroupParams(weight, preferedOrientation)
+            this.id = getLayoutId()
         }
     }
 
@@ -35,6 +43,7 @@ open class JsonFormDrawerImpl(val context: Context){
                 Layout.scrollPadding[2],
                 Layout.scrollPadding[3]
             )
+            this.id = getLayoutId()
         }
     }
 
@@ -49,6 +58,7 @@ open class JsonFormDrawerImpl(val context: Context){
         return LinearLayout(context).apply {
             this.orientation   = Layout.getLayourOrientation(orientation)
             this.layoutParams  = Layout.GroupParams(weight, preferedOrientation)
+            this.id = getLayoutId()
         }
     }
 
@@ -59,6 +69,7 @@ open class JsonFormDrawerImpl(val context: Context){
     fun drawerScroll(): ScrollView {
         return ScrollView(context).apply {
             this.layoutParams  = Layout.p3
+            this.id = getLayoutId()
         }
     }
 
@@ -77,6 +88,7 @@ open class JsonFormDrawerImpl(val context: Context){
                 Layout.boxPadding[2],
                 Layout.boxPadding[3]
             )
+            this.id = getLayoutId()
         }
     }
 
@@ -92,6 +104,7 @@ open class JsonFormDrawerImpl(val context: Context){
             text = description
             setTextAppearance(context, style)
             layoutParams = Layout.LabelParams(preferedOrientation, context, weight)
+            this.id = getLayoutId()
         }
     }
 
@@ -105,6 +118,7 @@ open class JsonFormDrawerImpl(val context: Context){
     fun drawerListbox(preferedOrientation: String?, weight: Float=2.0f): Spinner {
         return Spinner(context).apply {
             //setBackgroundResource(R.color.iconYellow) // Temporal
+            this.id = getLayoutId()
             setPadding(
                 Layout.spinnerPadding[0],
                 Layout.spinnerPadding[1],
@@ -127,6 +141,7 @@ open class JsonFormDrawerImpl(val context: Context){
             setTextAppearance(context, style)
             layoutParams = Layout.EditTextParams(preferedOrientation, context, weight)
             setLines(lines)
+            this.id = getLayoutId()
         }
     }
 
@@ -141,6 +156,7 @@ open class JsonFormDrawerImpl(val context: Context){
     fun drawerButton(): TextView {
         return Button(context).apply {
             layoutParams = Layout.p3
+            this.id = getLayoutId()
         }
     }
 
@@ -157,22 +173,26 @@ open class JsonFormDrawerImpl(val context: Context){
             cropToPadding   = true
             setBackgroundColor(resources.getColor(android.R.color.transparent))
             setImageResource(src)
+            this.id = getLayoutId()
         }
     }
 
     /**
      * Obtiene el CheckBox
-     * @param   src                     Imagen a mostrar
-     * @param   preferedOrientation     Orientacion preferida
+     * @param   parentId                Id del contenedor de los checkboxs
+     * @param   id                      Id especifico del checkbox
+     * @param   descripcion             Texto del checkbox
      * @param   weight                  Distribucion del elemento en el conjunto
-     * @return EdiText configurado
+     * @return CheckBox configurado
      */
-    fun drawerCheckBox(id:Int, value: String, weight: Float?): AppCompatCheckBox {
+    fun drawerCheckBox(parentId:Int, id:String, descripcion: String, weight: Float?): AppCompatCheckBox {
         //AppCompatCheckBox(context)
-        return AppCompatCheckBox(context).apply {
-            text            = value
-            tag             = id
-            layoutParams    = Layout.CheckBoxParams(weight)
+        return PmCheckBox(context).apply {
+            this.parentId           = parentId
+            this.itemId             = id
+            this.text               = descripcion
+            this.layoutParams       = Layout.CheckBoxParams(weight)
+            this.id                 = getLayoutId()
         }
     }
 
@@ -188,6 +208,7 @@ open class JsonFormDrawerImpl(val context: Context){
             text            = value
             tag             = id
             layoutParams    = Layout.CheckBoxParams(weight)
+            this.id         = getLayoutId()
         }
     }
 
@@ -199,7 +220,8 @@ open class JsonFormDrawerImpl(val context: Context){
      */
     fun drawerTitle(id:Int, description: String): TextView {
         return TextView(context).apply {
-            text = description
+            this.text   = description
+            this.id     = getLayoutId()
             //setTextAppearance(context, R.style.labelTitle)
             layoutParams = Layout.p2
             setPadding(
@@ -207,6 +229,22 @@ open class JsonFormDrawerImpl(val context: Context){
                 Layout.titlePadding[1],
                 Layout.titlePadding[2],
                 Layout.titlePadding[3])
+        }
+    }
+
+    /**
+     * Obtiene un Switch
+     * @param   description         Texto a mostrar
+     * @param   textOff             Texto a mostrar switch off
+     * @param   textOn              Texto a mostrar switch on
+     * @return  Switch configurado
+     */
+    fun drawerSwitch(description: String, textOff:String, textOn:String): Switch {
+        return Switch(context).apply {
+            this.id         = getLayoutId()
+            this.text       = description
+            this.textOff    = textOff
+            this.textOn     = textOn
         }
     }
 }

@@ -47,7 +47,7 @@ object Json {
         if(mainObject!=null) {
             try {
                 if (mainObject.has(key))
-                    value = mainObject.getInt("key")
+                    value = mainObject.getInt(key)
                 //else
                 //     return "";
             } catch (e: JSONException) {

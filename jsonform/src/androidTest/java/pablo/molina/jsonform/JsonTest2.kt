@@ -1,29 +1,27 @@
 package pablo.molina.jsonform
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.Test
-import org.junit.runner.RunWith
 
 import org.junit.Assert.*
+import org.junit.Before
+import org.junit.runner.RunWith
 
 /**
- * Instrumented test, which will execute on an Android device.
+ * Example local unit test, which will execute on the development machine (host).
  *
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 @RunWith(AndroidJUnit4::class)
-class ExampleInstrumentedTest {
+class JsonTest2 {
 
     val textJson = "{\"descripcion\":\"some text\", \"age\":4}"
 
-    @Test
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("pablo.molina.jsonform.test", appContext.packageName)
-    }
+ /*   @Before
+    fun setup(){
+
+    }*/
 
     @Test
     fun addition_isCorrect() {

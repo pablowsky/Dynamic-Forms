@@ -10,10 +10,6 @@ import org.json.JSONArray
 class FormContract {
 
     interface View: BaseContract.View{
-        fun mkTextInput(label:String?, value:String, lines:Int)
-        fun mkListInput(label:String?, items:ArrayList<SelectableItem>)
-        fun mkRadioInput(label: String?, items:ArrayList<SelectableItem>)
-        fun mkCheckInput(label: String?, items:ArrayList<SelectableItem>)
         fun loadForm(array: JSONArray)
     }
 

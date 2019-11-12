@@ -6,6 +6,7 @@ import cl.datageneral.dynamicforms.R
 import cl.datageneral.dynamicforms.ui.DaggerJFormActivity
 import pablo.molina.jsonform.spinner.SelectableItem
 import kotlinx.android.synthetic.main.activity_form.*
+import kotlinx.android.synthetic.main.app_gp_btns.*
 import org.json.JSONArray
 import pablo.molina.jsonform.JsonForm
 import java.io.IOException
@@ -25,6 +26,9 @@ class FormActivity : DaggerJFormActivity(), FormContract.View {
         getFormConfig() // Esto estara en la capa de datos
         presenter.start()
 
+        btnGuardar.setOnClickListener{
+            getValues()
+        }
     }
 
     fun getFormConfig(){ // Esto estara en la capa de datos
@@ -45,42 +49,13 @@ class FormActivity : DaggerJFormActivity(), FormContract.View {
     }
 
     override fun loadForm(array: JSONArray){
-        val som = JsonForm(array, my_layout, this)
-        som.getFields()
-        if(som.events.size > 0){
-            for(event in som.events){
+        jsonForm = JsonForm(array, my_layout, this)
+        jsonForm!!.getFields()
+        if(jsonForm!!.events.size > 0){
+            for(event in jsonForm!!.events){
                 Log.e("loadForm","Type: "+event.type)
                 startEvent(event)
             }
         }
-    }
-
-
-
-    override fun mkTextInput(label:String?, value:String, lines:Int){
-        /*Log.e("mkTextInput",label)
-        val f = TextInputMaker(label, value, lines, this)
-        my_layout.addView(f.getObject())*/
-    }
-
-    override fun mkListInput(label: String?, items:ArrayList<SelectableItem>) {
-        /*Log.e("mkTextInput",label)
-        val f = ListInputMaker(label, items, this)
-        f.defaultItem = SelectableItem("Seleccione", 0)
-        my_layout.addView(f.getObject())*/
-    }
-
-    override fun mkRadioInput(label: String?, items:ArrayList<SelectableItem>) {
-        /*Log.e("mkTextInput",label)
-        val f = RadioInputMaker(label, items, this)
-        //f.defaultItem = SelectableItem("Seleccione", 0)
-        my_layout.addView(f.getObject())*/
-    }
-
-    override fun mkCheckInput(label: String?, items:ArrayList<SelectableItem>) {
-        /*Log.e("mkTextInput",label)
-        val f = CheckInputMaker(label, items, this)
-        //f.defaultItem = SelectableItem("Seleccione", 0)
-        my_layout.addView(f.getObject())*/
     }
 }

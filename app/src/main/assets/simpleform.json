@@ -8,7 +8,7 @@
         {"container": {
           "type": "title",
           "description": "Titulo Campos de texto de prueba",
-          "id":6
+          "id":1
         }},
         {
           "container": {
@@ -67,18 +67,29 @@
         {
           "container": {
             "type": "button",
-            "description": "boton de prueba",
+            "description": "boton de prueba1",
             "id": 17,
             "event":{
               "type":	"click",
-              "actions":[{"action":{"type":"disable", "containerId":4}}]
+              "actions":[{"action":{"type":"disable", "containerId":13}}]
+            }
+          }
+        },
+        {
+          "container": {
+            "type": "button",
+            "description": "boton de prueba2",
+            "id": 18,
+            "event":{
+              "type":	"click",
+              "actions":[{"action":{"type":"enable", "containerId":13}}]
             }
           }
         },
         {"container": {
           "type": "title",
           "description": "Titulo Listados de prueba",
-          "id":6
+          "id":2
         }},
         {
           "container": {
@@ -110,7 +121,7 @@
         {"container": {
           "type": "title",
           "description": "Titulo Casillas de prueba",
-          "id":6
+          "id":3
         }},
         {
           "container": {

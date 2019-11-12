@@ -10,6 +10,7 @@
 	{"action":{"type":"addMandatory",	"containerId":"x"}},
 	{"action":{"type":"rmMandatory",	"containerId":"x"}},
 	{"action":{"type":"open",			"containerId":"x", 		"predefined"="select_date"}}
+	{"action":{"type":"store",			"predefined"="select_date"}}
 ]
 
 
@@ -32,6 +33,13 @@
 	-- Aplica a: "linearlayout", "scrollform"
 	-- Actiones posibles: "show", "hide", "disable", "enable", "set", "unset", "open"
 
+
+
+Predefinidos:
+"select_date"
+"select_time"
+"single_tag"
+"multiple_tag"
 
 
 Ejemplos:

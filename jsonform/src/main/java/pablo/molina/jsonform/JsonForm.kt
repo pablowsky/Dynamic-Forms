@@ -1,6 +1,7 @@
 package pablo.molina.jsonform
 
 import android.content.Context
+import android.util.Log
 import android.view.View
 import android.widget.*
 import pablo.molina.jsonform.event.JFormAction
@@ -10,6 +11,8 @@ import pablo.molina.jsonform.spinner.LoadSpin
 import pablo.molina.jsonform.spinner.SelectableItem
 import org.json.JSONArray
 import org.json.JSONObject
+import java.security.MessageDigest
+import kotlin.random.Random
 
 /**
  * Created by Pablo Molina on 15-10-2019. s.pablo.molina@gmail.com
@@ -27,13 +30,15 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
     val events:ArrayList<JFormEvent> = ArrayList()
 
+    val widgets:HashMap<Int, View> = HashMap()
+
     fun getFields():View{
         baseLayout = LinearLayout(context)
         //var mv = View(context)
         val size = jsonArray.length()
         for (a in 0 until size){
             val obj         = jsonArray.getJSONObject(a)
-            val container   = pablo.molina.jsonform.Json.getObject(obj,"container")
+            val container   = Json.getObject(obj,"container")
 
             extractObj(container!!, mainLayout)
         }
@@ -56,9 +61,9 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
     }*/
 
     fun extractObj(obj:JSONObject, parentView:View?):View?{
-        val type        = pablo.molina.jsonform.Json.getText(obj,"type")
-        val container   = pablo.molina.jsonform.Json.getObject(obj, "container")
-        val childs      = pablo.molina.jsonform.Json.getArray(obj, "_childs")
+        val type        = Json.getText(obj,"type")
+        val container   = Json.getObject(obj, "container")
+        val childs      = Json.getArray(obj, "_childs")
 
         val c:View? = when(getType(type)){
             ContainerType.BOX ->{
@@ -67,7 +72,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                     val size = childs.length()
                     for (a in 0 until size){
                         val sobj    = childs.getJSONObject(a)
-                        val cChild  = pablo.molina.jsonform.Json.getObject(sobj, "container")
+                        val cChild  = Json.getObject(sobj, "container")
                         linear      = extractObj(cChild!!, linear)
                     }
                 }
@@ -119,24 +124,26 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
     }
 
     private fun procWidget(type:String, obj: JSONObject?):View?{
-        val description     = pablo.molina.jsonform.Json.getText(obj, "description")
-        val id              = pablo.molina.jsonform.Json.getInt(obj, "id", 0)
-        val mandatory       = pablo.molina.jsonform.Json.getBoolean(obj, "mandatory")
-        val evt             = getEvent(obj)
+        val description     = Json.getText(obj, "description")
+        val id              = Json.getInt(obj, "id", 0)
+        val mandatory       = Json.getBoolean(obj, "mandatory")
+        var evt             = getEvent(obj)
 
-        val widget = when(type){
+        val container = when(type){
             "title"       -> {
                 drawerTitle(id, description).apply {
                     setTextAppearance(context, R.style.labelTitle)
+                    widgets[id] = this
                 }
             }
             "textedit"       -> {
-                val lines           = pablo.molina.jsonform.Json.getInt(obj, "lines", 1)
+                val lines           = Json.getInt(obj, "lines", 1)
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
                 val label           = drawerLabel(description, R.style.labelParams, preOrientation)
                 val edittext        = drawerEditText(lines, R.style.editTextParams, preOrientation)
                 evt?.view = edittext
+                widgets[id] = edittext
                 add(box, label)
                 add(box, edittext)
             }
@@ -147,6 +154,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
                 val image           = drawerImage(R.drawable.ic_datepicker, preOrientation, 1.0f)
                 evt?.view = edittext
+                widgets[id] = edittext
                 add(box, label)
                 add(box, edittext)
                 add(box, image)
@@ -158,6 +166,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
                 val image           = drawerImage(R.drawable.ic_timepicker, preOrientation, 1.0f)
                 evt?.view = edittext
+                widgets[id] = edittext
                 add(box, label)
                 add(box, edittext)
                 add(box, image)
@@ -176,6 +185,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                     selectedItemStyle = R.style.spinnerParams
                     Load()
                 }
+                widgets[id] = spinner
                 evt?.view = spinner
                 add(box, label)
                 add(box, spinner)
@@ -192,8 +202,15 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                     weigth = 2.0f
                 }
                 val group           = drawerGroup(itemsOrientation, preOrientation, weigth)
+
                 for(item in itemsArray){
-                    group.addView(drawerCheckBox(item.id, item.value!!, null))
+                    val checkox = drawerCheckBox(id, item.id.toString(), item.value!!, null)
+                    val evt0 = getGroupEvent("multiple_tag")
+                    evt0.view = checkox
+                    events.add(evt0)
+
+                    //widgets[id] = checkox
+                    group.addView(checkox)
                 }
                 add(box, group)
             }
@@ -212,26 +229,37 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 for(item in itemsArray){
                     group.addView(drawerRadioButton(item.id, item.value!!, null))
                 }
+
+                // Evento de almacenamiento
+                val evt0 = getGroupEvent("single_tag")
+                evt0.view = group
+                events.add(evt0)
+
+                widgets[id] = group
                 add(box, group)
             }
             "switch"    -> { // Faltan eventos
-                Switch(context).apply {
-                    this.text       = description
-                    this.textOff    = pablo.molina.jsonform.Json.getText(obj, "textOff")
-                    this.textOn     = pablo.molina.jsonform.Json.getText(obj, "textOn")
+                drawerSwitch(
+                    description,
+                    Json.getText(obj, "textOff"),
+                    Json.getText(obj, "textOn")
+                ).apply {
+                    widgets[id] = this
                 }
             }
             "button"        -> { // Falta completar
                 drawerButton().apply {
                     this.text = description
                     evt?.view = this
+                    widgets[id] = this
                 }
             }
             else -> View(context)
         }?.apply {
-            if(id!=0) {
+            /*if(id!=0) {
                 setId(id)
-            }
+            }*/
+
             if(mandatory){
                 mandatoryFields?.add(this)
             }
@@ -239,17 +267,38 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 events.add(evt)
             }
         }
-        return widget
+        return container
+    }
+
+    private fun getGroupEvent(predefined:String):JFormEvent{
+        val event = JFormEvent()
+        event.type = JFormEvent.Type.CHANGE
+
+        val act = JFormAction()
+        act.predefined  = predefined
+        act.type = JFormAction.Type.STORE
+
+        event.actions.add(act)
+        return event
+    }
+
+    fun String.toMD5(): String {
+        val bytes = MessageDigest.getInstance("MD5").digest(this.toByteArray())
+        return bytes.toHex()
+    }
+
+    fun ByteArray.toHex(): String {
+        return joinToString("") { "%02x".format(it) }
     }
 
 
-
     private fun getEvent(obj: JSONObject?): JFormEvent?{
-        val event = pablo.molina.jsonform.Json.getObject(obj!!, "event")
+        val event = Json.getObject(obj!!, "event")
         var jevent: JFormEvent? = null
         if(event!=null){
+            // Evento
             jevent = JFormEvent()
-            val type = pablo.molina.jsonform.Json.getText(event,"type")
+            val type = Json.getText(event,"type")
             jevent.type = when(type){
                 "change"    -> JFormEvent.Type.CHANGE
                 "click"     -> JFormEvent.Type.CLICK
@@ -257,15 +306,16 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 else -> null
             }
 
-            val actions = pablo.molina.jsonform.Json.getArray(event, "actions")
+            // Acciones
+            val actions = Json.getArray(event, "actions")
             if(actions!=null){
                 val size = actions.length()
                 for (a in 0 until size){
                     val sobj    = actions.getJSONObject(a)
-                    val actObj  = pablo.molina.jsonform.Json.getObject(sobj, "action")
-                    val atype   = pablo.molina.jsonform.Json.getText(actObj, "type")
-                    val apredef = pablo.molina.jsonform.Json.getText(actObj, "predefined")
-                    val acontid = pablo.molina.jsonform.Json.getInt(actObj, "containerId", 0)
+                    val actObj  = Json.getObject(sobj, "action")
+                    val atype   = Json.getText(actObj, "type")
+                    val apredef = Json.getText(actObj, "predefined")
+                    val acontid = Json.getInt(actObj, "containerId", 0)
                     val act = JFormAction()
                     act.containerId = acontid
                     act.predefined  = apredef
@@ -285,11 +335,12 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 }
             }
 
-            val conditions = pablo.molina.jsonform.Json.getObject(event, "conditions")
+            // Condicion
+            val conditions = Json.getObject(event, "conditions")
             if(conditions!=null){
-                val acond   = pablo.molina.jsonform.Json.getText(conditions, "condition")
-                val avalue  = pablo.molina.jsonform.Json.getText(conditions, "value")
-                val aitems  = pablo.molina.jsonform.Json.getArray(conditions, "items")
+                val acond   = Json.getText(conditions, "condition")
+                val avalue  = Json.getText(conditions, "value")
+                val aitems  = Json.getArray(conditions, "items")
                 val jcond   = JFormCondition()
                 jcond.type        = when(acond){
                     "ET"      -> JFormCondition.Type.ET
@@ -314,19 +365,19 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
     }
 
     private fun getSelectableItems(obj: JSONObject?, key:String):ArrayList<SelectableItem>{
-        val itemsObj        = pablo.molina.jsonform.Json.getArray(obj, key)
+        val itemsObj        = Json.getArray(obj, key)
         val spinnerArray = ArrayList<SelectableItem>()
         for(x in 0 until itemsObj!!.length()){
-            val obj     = pablo.molina.jsonform.Json.getObject(itemsObj.get(x).toString())
-            val id      = pablo.molina.jsonform.Json.getInt(obj,"id", 0)
-            val value   = pablo.molina.jsonform.Json.getText(obj,"value")
+            val obj     = Json.getObject(itemsObj.get(x).toString())
+            val id      = Json.getInt(obj,"id", 0)
+            val value   = Json.getText(obj,"value")
             spinnerArray.add(SelectableItem(value, id))
         }
         return spinnerArray
     }
 
     private fun getOrientation(obj: JSONObject?, key:String, opposite:Boolean):String{
-        val orientation     = pablo.molina.jsonform.Json.getText(obj, key)
+        val orientation     = Json.getText(obj, key)
         return if (orientation.isEmpty()) {
             Layout.procOrientation(context, opposite)
         }else{
@@ -334,7 +385,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
         }
     }
     private fun getOrientation(obj: JSONObject?, key:String, default:String):String{
-        val orientation     = pablo.molina.jsonform.Json.getText(obj, key)
+        val orientation     = Json.getText(obj, key)
         return if (orientation.isEmpty()) {
             default
         }else{
