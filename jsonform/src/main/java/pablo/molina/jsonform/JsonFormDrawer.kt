@@ -2,8 +2,8 @@ package pablo.molina.jsonform
 
 import android.content.Context
 import android.widget.*
-import androidx.appcompat.widget.AppCompatCheckBox
 import pablo.molina.jsonform.widgets.PmCheckBox
+import pablo.molina.jsonform.widgets.PmRadioButton
 
 /**
  * Created by Pablo Molina on 17-10-2019. s.pablo.molina@gmail.com
@@ -185,7 +185,7 @@ open class JsonFormDrawerImpl(val context: Context){
      * @param   weight                  Distribucion del elemento en el conjunto
      * @return CheckBox configurado
      */
-    fun drawerCheckBox(parentId:Int, id:String, descripcion: String, weight: Float?): AppCompatCheckBox {
+    fun drawerCheckBox(parentId:Int, id:String, descripcion: String, weight: Float?): PmCheckBox {
         //AppCompatCheckBox(context)
         return PmCheckBox(context).apply {
             this.parentId           = parentId
@@ -198,15 +198,18 @@ open class JsonFormDrawerImpl(val context: Context){
 
     /**
      * Obtiene un RadioButton configurado con parametros
+     * @param   parentId                Id del radiogroup
      * @param   id                      Id del valor del radiobutton
      * @param   value                   Valor a mostrar del radio button
      * @param   weight                  Distribucion del elemento en el conjunto
      * @return RadioButton configurado
      */
-    fun drawerRadioButton(id:Int, value: String, weight: Float?): RadioButton {
-        return RadioButton(context).apply {
+    fun drawerRadioButton(parentId:Int, id:String, value: String, weight: Float?): PmRadioButton {
+        return PmRadioButton(context).apply {
+            this.parentId           = parentId
+            this.itemId             = id
             text            = value
-            tag             = id
+            //tag             = id
             layoutParams    = Layout.CheckBoxParams(weight)
             this.id         = getLayoutId()
         }

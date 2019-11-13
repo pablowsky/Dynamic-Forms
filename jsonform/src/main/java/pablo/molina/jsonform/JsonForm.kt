@@ -227,7 +227,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 }
                 val group           = drawerRadioGroup(itemsOrientation, preOrientation, weigth)
                 for(item in itemsArray){
-                    group.addView(drawerRadioButton(item.id, item.value!!, null))
+                    group.addView(drawerRadioButton(id, item.id.toString(), item.value!!, null))
                 }
 
                 // Evento de almacenamiento

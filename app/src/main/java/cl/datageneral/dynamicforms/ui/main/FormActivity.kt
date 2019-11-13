@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import cl.datageneral.dynamicforms.R
 import cl.datageneral.dynamicforms.ui.DaggerJFormActivity
-import pablo.molina.jsonform.spinner.SelectableItem
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.app_gp_btns.*
 import org.json.JSONArray
@@ -27,7 +26,8 @@ class FormActivity : DaggerJFormActivity(), FormContract.View {
         presenter.start()
 
         btnGuardar.setOnClickListener{
-            getValues()
+            val obj = getValues()
+            Log.e("Obj", obj.toString(4))
         }
     }
 

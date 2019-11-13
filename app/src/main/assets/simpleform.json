@@ -14,7 +14,7 @@
           "container": {
             "type": "textedit",
             "description": "Campo de prueba 1",
-            "id": 3,
+            "id": 19,
             "lines": "1",
             "inputType": "email",
             "mandatory": true,
@@ -95,7 +95,7 @@
           "container": {
             "type": "listbox",
             "description": "Listado de prueba",
-            "id": 7,
+            "id": 20,
             "orientation": "horizontal",
             "items": [
               {

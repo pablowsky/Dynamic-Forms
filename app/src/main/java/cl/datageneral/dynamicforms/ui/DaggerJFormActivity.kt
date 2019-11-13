@@ -1,17 +1,19 @@
 package cl.datageneral.dynamicforms.ui
 
-import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.*
 import pablo.molina.jsonform.event.JFormAction
 import pablo.molina.jsonform.event.JFormEvent
 import dagger.android.support.DaggerAppCompatActivity
+import org.json.JSONArray
+import org.json.JSONObject
 import pablo.molina.jsonform.JsonForm
 import pablo.molina.jsonform.fragments.SelectDateFragment
 import pablo.molina.jsonform.fragments.SelectTimeFragment
 import pablo.molina.jsonform.spinner.SelectableItem
 import pablo.molina.jsonform.widgets.PmCheckBox
+import pablo.molina.jsonform.widgets.PmRadioButton
 
 /**
  * Created by Pablo Molina on 06-11-2019. s.pablo.molina@gmail.com
@@ -54,10 +56,8 @@ open class DaggerJFormActivity: DaggerAppCompatActivity(){
             val rg = event.view!! as  RadioGroup
             rg.setOnCheckedChangeListener { radioGroup, i ->
                 val rbId    = radioGroup.checkedRadioButtonId
-                val rb      = findViewById<TextView>(rbId)
-                Log.e("tag", rb.tag.toString())
-                // Falta agregar al conjunto d valores
-                //selectedItems[rg.i] = list
+                val rb      = findViewById<PmRadioButton>(rbId)
+                selectedItems[rb.parentId] = arrayListOf(rb.itemId)
             }
         }
         if(event.view!! is PmCheckBox){
@@ -84,9 +84,10 @@ open class DaggerJFormActivity: DaggerAppCompatActivity(){
 
 
 
-    fun getValues(){
+    fun getValues():JSONObject{
+        val jObj = JSONObject()
         for(a in jsonForm!!.widgets){
-            val value:String = when(a.value){
+            val value:String? = when(a.value){
                 is EditText -> {
                     val b = a.value as EditText
                     b.text.toString()
@@ -94,19 +95,16 @@ open class DaggerJFormActivity: DaggerAppCompatActivity(){
                 is Spinner -> {
                     getSelectedSpinString(a.value as Spinner)
                 }
-                /*is RadioGroup -> { String() }
-                is PmCheckBox -> {
-                    val cb = a.value as PmCheckBox
-                    Log.e("PmCheckBox_"+cb.parentId, "-"+cb.itemId)
-                    String()
-                }*/
-                else ->  String()
+                else ->  null
             }
-            Log.e("value"+a.key, value)
+            if(value!=null) {
+                jObj.put(a.key.toString(), value)
+            }
         }
         for(item in selectedItems){
-            Log.e("value"+item.key, item.value.toString())
+            jObj.put(item.key.toString(), JSONArray(item.value))
         }
+        return jObj
     }
 
     inline fun <reified T : View>loadAction(view: View, actions:MutableList<JFormAction>){
