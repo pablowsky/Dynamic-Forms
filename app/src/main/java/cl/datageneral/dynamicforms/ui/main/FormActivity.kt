@@ -3,7 +3,7 @@ package cl.datageneral.dynamicforms.ui.main
 import android.os.Bundle
 import android.util.Log
 import cl.datageneral.dynamicforms.R
-import cl.datageneral.dynamicforms.ui.DaggerJFormActivity
+import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.app_gp_btns.*
 import org.json.JSONArray
@@ -12,10 +12,13 @@ import java.io.IOException
 import javax.inject.Inject
 
 
-class FormActivity : DaggerJFormActivity(), FormContract.View {
+class FormActivity : DaggerAppCompatActivity(), FormContract.View {
+
+    var my_var:JsonForm? = null
 
     @Inject
     lateinit var presenter: FormPresenter<FormContract.View>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +29,9 @@ class FormActivity : DaggerJFormActivity(), FormContract.View {
         presenter.start()
 
         btnGuardar.setOnClickListener{
-            val obj = getValues()
+            val my_serializer = my_var!!.getSerializer("name")
+            val obj =my_serializer.getValues()
+
             Log.e("Obj", obj.toString(4))
         }
     }
@@ -49,13 +54,8 @@ class FormActivity : DaggerJFormActivity(), FormContract.View {
     }
 
     override fun loadForm(array: JSONArray){
-        jsonForm = JsonForm(array, my_layout, this)
-        jsonForm!!.getFields()
-        if(jsonForm!!.events.size > 0){
-            for(event in jsonForm!!.events){
-                Log.e("loadForm","Type: "+event.type)
-                startEvent(event)
-            }
-        }
+        my_var = JsonForm(array, this)
+        my_var!!.loadJsonForm("name", my_layout)
+        my_var!!.startJsonEvents("name")
     }
 }

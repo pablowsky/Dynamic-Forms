@@ -12,7 +12,7 @@ import dagger.Provides
 abstract class FormModule{
 
     @Binds
-    abstract fun provideFormActivityView(subMenuActivity: FormActivity): FormContract.View
+    abstract fun provideFormActivityView(formActivity: FormActivity): FormContract.View
 
     @Module
     companion object {
@@ -20,5 +20,10 @@ abstract class FormModule{
         @JvmStatic
         @Provides
         fun provideFormPresenter(dm: DataManager): FormPresenter<FormContract.View> = FormPresenter(dm)
+
+        /*@JvmStatic
+        @Provides
+        fun provideJsonForm(activity: FormActivity): JsonFormEvents =
+            JsonFormEvents(activity)*/
     }
 }

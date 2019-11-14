@@ -1,9 +1,8 @@
 package pablo.molina.jsonform
 
-import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import pablo.molina.jsonform.event.JFormAction
 import pablo.molina.jsonform.event.JFormCondition
 import pablo.molina.jsonform.event.JFormEvent
@@ -11,13 +10,14 @@ import pablo.molina.jsonform.spinner.LoadSpin
 import pablo.molina.jsonform.spinner.SelectableItem
 import org.json.JSONArray
 import org.json.JSONObject
-import java.security.MessageDigest
-import kotlin.random.Random
 
 /**
  * Created by Pablo Molina on 15-10-2019. s.pablo.molina@gmail.com
  */
-class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context): JsonFormDrawerImpl(context){
+class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormInt, JsonFormDrawerImpl(context){
+
+    var serializer: JsonFormSerializer = JsonFormSerializer(this)
+    var jevents: JsonFormEvents = JsonFormEvents(this, context)
 
     private var baseLayout = LinearLayout(context)
 
@@ -30,11 +30,10 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
     val events:ArrayList<JFormEvent> = ArrayList()
 
-    val widgets:HashMap<Int, View> = HashMap()
+    private val widgetsCollection:HashMap<Int, View> = HashMap()
 
-    fun getFields():View{
+    fun loadJsonForm(name:String, mainLayout:View){
         baseLayout = LinearLayout(context)
-        //var mv = View(context)
         val size = jsonArray.length()
         for (a in 0 until size){
             val obj         = jsonArray.getJSONObject(a)
@@ -42,23 +41,19 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
             extractObj(container!!, mainLayout)
         }
-        return mainLayout
     }
 
-/*    fun getMainForm():View{
-        var mv = View(context)
-        val size = jsonArray.length()
-        for (a in 0 until size){
-            val obj         = jsonArray.getJSONObject(a)
-            val container   = Json.getObject(obj,"container")
-            val usage       = Json.getText(container!!,"usage")
+    fun startJsonEvents(name:String){
+        jevents.startAllEvents()
+    }
 
-            if(usage == "main" ){
-                mv = extractObj(obj, mainLayout)
-            }
-        }
-        return mv
-    }*/
+    fun getSerializer(name:String):JsonFormSerializer{
+        return serializer
+    }
+
+    override fun getWidgets(): HashMap<Int, View> {
+        return widgetsCollection
+    }
 
     fun extractObj(obj:JSONObject, parentView:View?):View?{
         val type        = Json.getText(obj,"type")
@@ -133,7 +128,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
             "title"       -> {
                 drawerTitle(id, description).apply {
                     setTextAppearance(context, R.style.labelTitle)
-                    widgets[id] = this
+                    widgetsCollection[id] = this
                 }
             }
             "textedit"       -> {
@@ -143,7 +138,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 val label           = drawerLabel(description, R.style.labelParams, preOrientation)
                 val edittext        = drawerEditText(lines, R.style.editTextParams, preOrientation)
                 evt?.view = edittext
-                widgets[id] = edittext
+                widgetsCollection[id] = edittext
                 add(box, label)
                 add(box, edittext)
             }
@@ -154,7 +149,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
                 val image           = drawerImage(R.drawable.ic_datepicker, preOrientation, 1.0f)
                 evt?.view = edittext
-                widgets[id] = edittext
+                widgetsCollection[id] = edittext
                 add(box, label)
                 add(box, edittext)
                 add(box, image)
@@ -166,7 +161,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
                 val image           = drawerImage(R.drawable.ic_timepicker, preOrientation, 1.0f)
                 evt?.view = edittext
-                widgets[id] = edittext
+                widgetsCollection[id] = edittext
                 add(box, label)
                 add(box, edittext)
                 add(box, image)
@@ -185,7 +180,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                     selectedItemStyle = R.style.spinnerParams
                     Load()
                 }
-                widgets[id] = spinner
+                widgetsCollection[id] = spinner
                 evt?.view = spinner
                 add(box, label)
                 add(box, spinner)
@@ -209,7 +204,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                     evt0.view = checkox
                     events.add(evt0)
 
-                    //widgets[id] = checkox
+                    //widgetsCollection[id] = checkox
                     group.addView(checkox)
                 }
                 add(box, group)
@@ -235,7 +230,7 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                 evt0.view = group
                 events.add(evt0)
 
-                widgets[id] = group
+                widgetsCollection[id] = group
                 add(box, group)
             }
             "switch"    -> { // Faltan eventos
@@ -244,14 +239,14 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
                     Json.getText(obj, "textOff"),
                     Json.getText(obj, "textOn")
                 ).apply {
-                    widgets[id] = this
+                    widgetsCollection[id] = this
                 }
             }
             "button"        -> { // Falta completar
                 drawerButton().apply {
                     this.text = description
                     evt?.view = this
-                    widgets[id] = this
+                    widgetsCollection[id] = this
                 }
             }
             else -> View(context)
@@ -281,16 +276,6 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
         event.actions.add(act)
         return event
     }
-
-    fun String.toMD5(): String {
-        val bytes = MessageDigest.getInstance("MD5").digest(this.toByteArray())
-        return bytes.toHex()
-    }
-
-    fun ByteArray.toHex(): String {
-        return joinToString("") { "%02x".format(it) }
-    }
-
 
     private fun getEvent(obj: JSONObject?): JFormEvent?{
         val event = Json.getObject(obj!!, "event")
@@ -434,4 +419,8 @@ class JsonForm(val jsonArray: JSONArray, val mainLayout:View, context: Context):
 
 enum class ContainerType{
     BOX, WIDGET, SPECIAL, PREDEFINED
+}
+
+interface JsonFormInt{
+    fun getWidgets():HashMap<Int, View>
 }
