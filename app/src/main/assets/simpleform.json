@@ -1,6 +1,7 @@
 [
   {
     "container": {
+      "name": "myForm",
       "type": "scrollform",
       "width": "match_parent",
       "height": "match_parent",
@@ -71,7 +72,7 @@
             "id": 17,
             "event":{
               "type":	"click",
-              "actions":[{"action":{"type":"disable", "containerId":13}}]
+              "actions":[{"action":{"type":"disable", "containerId":17}}]
             }
           }
         },
@@ -82,7 +83,7 @@
             "id": 18,
             "event":{
               "type":	"click",
-              "actions":[{"action":{"type":"enable", "containerId":13}}]
+              "actions":[{"action":{"type":"enable", "containerId":17}}]
             }
           }
         },
@@ -96,8 +97,13 @@
             "type": "listbox",
             "description": "Listado de prueba",
             "id": 20,
+            "mandatory": true,
             "orientation": "horizontal",
             "items": [
+              {
+                "id": "",
+                "value": "Seleccione"
+              },
               {
                 "id": 1,
                 "value": "Valor de prueba1"
@@ -228,7 +234,8 @@
             "type": "radiobutton",
             "description": "Punto de prueba",
             "id": 11,
-            "orientation": "horizontal",
+            "mandatory": true,
+            "orientation": "vertical",
             "items": [
               {
                 "id": 1,

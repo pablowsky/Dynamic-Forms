@@ -8,7 +8,7 @@ import pablo.molina.jsonform.widgets.PmRadioButton
 /**
  * Created by Pablo Molina on 17-10-2019. s.pablo.molina@gmail.com
  */
-open class JsonFormDrawerImpl(val context: Context){
+open class JsonFormDrawerImpl(val context: Context, val styles: FormStyles){
     var currId = 1
 
 
@@ -99,10 +99,10 @@ open class JsonFormDrawerImpl(val context: Context){
      * @param preferedOrientation   Orientacion preferida
      * @return TextView configurado
      */
-    fun drawerLabel(description:String, style:Int, preferedOrientation: String?, weight: Float=1.0f): TextView {
+    fun drawerLabel(description:String, preferedOrientation: String?, weight: Float=1.0f): TextView {
         return TextView(context).apply {
             text = description
-            setTextAppearance(context, style)
+            setTextAppearance(context, styles.labelNormal)
             layoutParams = Layout.LabelParams(preferedOrientation, context, weight)
             this.id = getLayoutId()
         }
@@ -119,6 +119,7 @@ open class JsonFormDrawerImpl(val context: Context){
         return Spinner(context).apply {
             //setBackgroundResource(R.color.iconYellow) // Temporal
             this.id = getLayoutId()
+            this.background = styles.spinnerNormal
             setPadding(
                 Layout.spinnerPadding[0],
                 Layout.spinnerPadding[1],
@@ -136,9 +137,9 @@ open class JsonFormDrawerImpl(val context: Context){
      * @param preferedOrientation   Orientacion preferida
      * @return EdiText configurado
      */
-    fun drawerEditText(lines: Int = 1, style:Int, preferedOrientation: String?, weight: Float=2.0f): TextView {
+    fun drawerEditText(lines: Int = 1, preferedOrientation: String?, weight: Float=2.0f): TextView {
         return EditText(context).apply {
-            setTextAppearance(context, style)
+            setTextAppearance(context, styles.editTextNormal)
             layoutParams = Layout.EditTextParams(preferedOrientation, context, weight)
             setLines(lines)
             this.id = getLayoutId()
@@ -167,11 +168,11 @@ open class JsonFormDrawerImpl(val context: Context){
      * @param   weight                  Distribucion del elemento en el conjunto
      * @return EdiText configurado
      */
-    fun drawerImage(src:Int, preferedOrientation: String?, weight: Float=2.0f): ImageButton {
+    fun drawerImage(src:Int, color:Int, preferedOrientation: String?, weight: Float=2.0f): ImageButton {
         return ImageButton(context).apply {
             layoutParams    = Layout.EditTextParams(preferedOrientation, context, weight)
             cropToPadding   = true
-            setBackgroundColor(resources.getColor(android.R.color.transparent))
+            setBackgroundColor(color)
             setImageResource(src)
             this.id = getLayoutId()
         }

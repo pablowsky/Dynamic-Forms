@@ -60,6 +60,24 @@ object Json {
     }
 
     // text
+    fun getInt(mainObject: JSONObject?, key: String): Int? {
+        var value:Int? = null
+        if(mainObject!=null) {
+            try {
+                if (mainObject.has(key))
+                    value = mainObject.getInt(key)
+                //else
+                //     return "";
+            } catch (e: JSONException) {
+                // TODO Auto-generated catch block
+                //e.printStackTrace()
+            }
+        }
+
+        return value
+    }
+
+    // text
     fun getBoolean(mainObject: JSONObject?, key: String): Boolean {
         var value = false
         if(mainObject!=null) {

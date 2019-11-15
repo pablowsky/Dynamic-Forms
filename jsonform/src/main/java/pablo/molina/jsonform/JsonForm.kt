@@ -1,5 +1,6 @@
 package pablo.molina.jsonform
 
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -14,23 +15,23 @@ import org.json.JSONObject
 /**
  * Created by Pablo Molina on 15-10-2019. s.pablo.molina@gmail.com
  */
-class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormInt, JsonFormDrawerImpl(context){
+class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: FormStyles): JsonFormInt, JsonFormDrawerImpl(context, styles){
+    //private var mStyles:FormStyles
 
-    var serializer: JsonFormSerializer = JsonFormSerializer(this)
-    var jevents: JsonFormEvents = JsonFormEvents(this, context)
 
-    private var baseLayout = LinearLayout(context)
+
+    var serializer:         JsonFormSerializer          = JsonFormSerializer(this)
+    var jevents:            JsonFormEvents              = JsonFormEvents(this, context)
+    val mandatoryFields:    ArrayList<Int>              = ArrayList()
+    val events:             ArrayList<JFormEvent>       = ArrayList()
+    private val widgetsCollection:HashMap<Int, View>    = HashMap()
+    private var baseLayout                              = LinearLayout(context)
 
     private val contBoxes       = arrayOf("linearlayout","afterscroll","scrollform","cardbox")
     private val contWidgets     = arrayOf("textedit","dateedit","timeedit","listbox","checkbox","radiobutton","button","title")
     private val contSpecials    = arrayOf("tablayout","tabitem")
     private val contPredefined  = arrayOf("add_items","check_items","pictures_gallery")
 
-    val mandatoryFields:ArrayList<View>? = ArrayList()
-
-    val events:ArrayList<JFormEvent> = ArrayList()
-
-    private val widgetsCollection:HashMap<Int, View> = HashMap()
 
     fun loadJsonForm(name:String, mainLayout:View){
         baseLayout = LinearLayout(context)
@@ -38,8 +39,10 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
         for (a in 0 until size){
             val obj         = jsonArray.getJSONObject(a)
             val container   = Json.getObject(obj,"container")
-
-            extractObj(container!!, mainLayout)
+            val cName       = Json.getText(container, "name")
+            if(name==cName){
+                extractObj(container!!, mainLayout)
+            }
         }
     }
 
@@ -127,7 +130,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
         val container = when(type){
             "title"       -> {
                 drawerTitle(id, description).apply {
-                    setTextAppearance(context, R.style.labelTitle)
+                    setTextAppearance(context, styles.title)
                     widgetsCollection[id] = this
                 }
             }
@@ -135,8 +138,8 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
                 val lines           = Json.getInt(obj, "lines", 1)
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.labelParams, preOrientation)
-                val edittext        = drawerEditText(lines, R.style.editTextParams, preOrientation)
+                val label           = drawerLabel(description, preOrientation)
+                val edittext        = drawerEditText(lines, preOrientation)
                 evt?.view = edittext
                 widgetsCollection[id] = edittext
                 add(box, label)
@@ -145,9 +148,9 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
             "dateedit"       -> { // Falta establecer como readonly
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.labelParams, preOrientation, 2.0f)
-                val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
-                val image           = drawerImage(R.drawable.ic_datepicker, preOrientation, 1.0f)
+                val label           = drawerLabel(description, preOrientation, 2.0f)
+                val edittext        = drawerEditText(1, preOrientation, 3.0f)
+                val image           = drawerImage(styles.dateImage, styles.dateBackgroundColor, preOrientation, 1.0f)
                 evt?.view = edittext
                 widgetsCollection[id] = edittext
                 add(box, label)
@@ -157,9 +160,9 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
             "timeedit"       -> { // Falta establecer como readonly
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.labelParams, preOrientation, 2.0f)
-                val edittext        = drawerEditText(1, R.style.editTextParams, preOrientation, 3.0f)
-                val image           = drawerImage(R.drawable.ic_timepicker, preOrientation, 1.0f)
+                val label           = drawerLabel(description, preOrientation, 2.0f)
+                val edittext        = drawerEditText(1, preOrientation, 3.0f)
+                val image           = drawerImage(styles.timeImage, styles.timeBackgroundColor, preOrientation, 1.0f)
                 evt?.view = edittext
                 widgetsCollection[id] = edittext
                 add(box, label)
@@ -167,17 +170,19 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
                 add(box, image)
             }
             "label"       -> {
-                drawerLabel(description, R.style.labelParams, null)
+                drawerLabel(description, null)
             }
             "listbox"       -> {
                 val spinnerArray    = getSelectableItems(obj, "items")
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
-                val label           = drawerLabel(description, R.style.labelParams, preOrientation)
-                val spinner         = drawerListbox(preOrientation)
+                val label           = drawerLabel(description, preOrientation)
+                val spinner         = drawerListbox(preOrientation).apply {
+
+                }
                 LoadSpin(context, spinner).run {
                     setData(spinnerArray)
-                    selectedItemStyle = R.style.spinnerParams
+                    selectedItemStyle = styles.spinnerSelected
                     Load()
                 }
                 widgetsCollection[id] = spinner
@@ -192,7 +197,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
                 val box             = drawerBoxInput(preOrientation)
                 var weigth:Float?   = null
                 if(description.isNotEmpty()) {
-                    val label = drawerLabel(description, R.style.labelParams, preOrientation)
+                    val label = drawerLabel(description, preOrientation)
                     add(box, label)
                     weigth = 2.0f
                 }
@@ -216,7 +221,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
                 val box             = drawerBoxInput(preOrientation)
                 var weigth:Float?   = null
                 if(description.isNotEmpty()){
-                    val label = drawerLabel(description, R.style.editTextParams, preOrientation)
+                    val label = drawerLabel(description, preOrientation)
                     add(box, label)
                     weigth = 2.0f
                 }
@@ -256,7 +261,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
             }*/
 
             if(mandatory){
-                mandatoryFields?.add(this)
+                mandatoryFields.add(id)
             }
             if(evt!=null) {
                 events.add(evt)
@@ -353,9 +358,9 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity): JsonFormIn
         val itemsObj        = Json.getArray(obj, key)
         val spinnerArray = ArrayList<SelectableItem>()
         for(x in 0 until itemsObj!!.length()){
-            val obj     = Json.getObject(itemsObj.get(x).toString())
-            val id      = Json.getInt(obj,"id", 0)
-            val value   = Json.getText(obj,"value")
+            val obj2     = Json.getObject(itemsObj.get(x).toString())
+            val id      = Json.getInt(obj2,"id")
+            val value   = Json.getText(obj2,"value")
             spinnerArray.add(SelectableItem(value, id))
         }
         return spinnerArray

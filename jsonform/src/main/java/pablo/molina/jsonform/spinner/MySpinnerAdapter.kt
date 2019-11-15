@@ -20,11 +20,11 @@ class MySpinnerAdapter(
 					myObjs) {
 
 	override fun getCount(): Int {
-		return myObjs?.size ?: 0
+		return myObjs.size
 	}
 
 	override fun getItem(position: Int): SelectableItem? {
-		return myObjs!![position]
+		return myObjs[position]
 	}
 
 	override fun getItemId(position: Int): Long {
@@ -33,7 +33,7 @@ class MySpinnerAdapter(
 
 	override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 		val label 	= TextView(context)
-		label.text 	= myObjs!![position].value
+		label.text 	= myObjs[position].value
 		if(selectedItemStyle!=null) {
 			label.setTextAppearance(context, selectedItemStyle)
 		}
@@ -54,7 +54,7 @@ class MySpinnerAdapter(
 		val rowView 	= inflater.inflate(android.R.layout.simple_list_item_1, parent, false)
 		val label 		= rowView.findViewById<TextView>(android.R.id.text1)
 		//TextView label = new TextView(context);
-		label.text 		= myObjs!![position].value
+		label.text 		= myObjs[position].value
 		label.post { label.setSingleLine(false) }
 		return label
 	}
