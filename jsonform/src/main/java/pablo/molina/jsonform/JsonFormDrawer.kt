@@ -2,6 +2,7 @@ package pablo.molina.jsonform
 
 import android.content.Context
 import android.widget.*
+import pablo.molina.jsonform.widgets.CheckBoxGroup
 import pablo.molina.jsonform.widgets.PmCheckBox
 import pablo.molina.jsonform.widgets.PmRadioButton
 
@@ -56,6 +57,21 @@ open class JsonFormDrawerImpl(val context: Context, val styles: FormStyles){
      */
     fun drawerGroup(orientation: String?, preferedOrientation: String?, weight: Float?): LinearLayout {
         return LinearLayout(context).apply {
+            this.orientation   = Layout.getLayourOrientation(orientation)
+            this.layoutParams  = Layout.GroupParams(weight, preferedOrientation)
+            this.id = getLayoutId()
+        }
+    }
+
+    /**
+     * Obtiene el CheckBoxGroup(LinearLayout) que almacenara los items de CheckBox
+     * @param orientation           Orientacion de los elementos dentro del layout
+     * @param preferedOrientation   Orientacion preferida
+     * @param weight                Distribucion del elemento en el grupo
+     * @return CheckBoxGroup configurado
+     */
+    fun drawerCheckBoxGroup(orientation: String?, preferedOrientation: String?, weight: Float?): CheckBoxGroup {
+        return CheckBoxGroup(context).apply {
             this.orientation   = Layout.getLayourOrientation(orientation)
             this.layoutParams  = Layout.GroupParams(weight, preferedOrientation)
             this.id = getLayoutId()
@@ -245,10 +261,11 @@ open class JsonFormDrawerImpl(val context: Context, val styles: FormStyles){
      */
     fun drawerSwitch(description: String, textOff:String, textOn:String): Switch {
         return Switch(context).apply {
+            this.layoutParams = Layout.p2
             this.id         = getLayoutId()
             this.text       = description
-            this.textOff    = textOff
-            this.textOn     = textOn
+            //this.textOff    = textOff
+            //this.textOn     = textOn
         }
     }
 }

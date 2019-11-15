@@ -201,7 +201,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                     add(box, label)
                     weigth = 2.0f
                 }
-                val group           = drawerGroup(itemsOrientation, preOrientation, weigth)
+                val group           = drawerCheckBoxGroup(itemsOrientation, preOrientation, weigth)
 
                 for(item in itemsArray){
                     val checkox = drawerCheckBox(id, item.id.toString(), item.value!!, null)
@@ -212,6 +212,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                     //widgetsCollection[id] = checkox
                     group.addView(checkox)
                 }
+                widgetsCollection[id] = group
                 add(box, group)
             }
             "radiobutton"      -> { // Faltan eventos

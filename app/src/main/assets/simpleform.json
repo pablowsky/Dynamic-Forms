@@ -67,6 +67,15 @@
         },
         {
           "container": {
+            "type": "switch",
+            "description": "Switch de prueba 1",
+            "valueOff": "N",
+            "valueOn": "S",
+            "id": 14
+          }
+        },
+        {
+          "container": {
             "type": "button",
             "description": "boton de prueba1",
             "id": 17,
@@ -336,15 +345,6 @@
                 "value": "Valor de prueba8"
               }
             ]
-          }
-        },
-        {
-          "container": {
-            "type": "switch",
-            "description": "Switch de prueba 1",
-            "valueOff": "N",
-            "valueOn": "S",
-            "id": 14
           }
         }
       ]

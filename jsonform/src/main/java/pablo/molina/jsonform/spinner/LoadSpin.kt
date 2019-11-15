@@ -71,19 +71,25 @@ class LoadSpin(private val context: Context, private val spinner: Spinner) {
 			spinner.onItemSelectedListener = onItemListener
 	}
 
-	private fun getIndex(spinner: Spinner, id: Int): Int {
-		var index = 0
-		var i = 0
-		while (i < spinner.count) {
-			val obj = spinner.getItemAtPosition(i) as SelectableItem
-			//Log.d("Obj:", Integer.toString(obj.getId()));
-			if (obj.id == id) {
-				//Log.d("Obj2:", Integer.toString(myString));
-				index = i
-				i = spinner.count
+	companion object{
+		fun getIndex(spinner: Spinner, id: Int): Int {
+			var index = 0
+			var i = 0
+			while (i < spinner.count) {
+				val obj = spinner.getItemAtPosition(i) as SelectableItem
+				//Log.d("Obj:", Integer.toString(obj.getId()));
+				if (obj.id == id) {
+					//Log.d("Obj2:", Integer.toString(myString));
+					index = i
+					i = spinner.count
+				}
+				i++
 			}
-			i++
+			return index
 		}
-		return index
+
+		fun setSelected(spinner: Spinner, selected: Int){
+			spinner.setSelection(getIndex(spinner, selected))
+		}
 	}
 }

@@ -10,7 +10,9 @@ import kotlinx.android.synthetic.main.activity_form.view.*
 import kotlinx.android.synthetic.main.app_gp_btns.*
 import org.json.JSONArray
 import pablo.molina.jsonform.FormStyles
+import pablo.molina.jsonform.Json
 import pablo.molina.jsonform.JsonForm
+import pablo.molina.jsonform.JsonFormInflate
 import java.io.IOException
 import javax.inject.Inject
 
@@ -81,5 +83,12 @@ class FormActivity : DaggerAppCompatActivity(), FormContract.View {
         my_var = JsonForm(array, this, mStyles)
         my_var!!.loadJsonForm("myForm", my_layout)
         my_var!!.startJsonEvents("myForm")
+
+
+        val saved = "{\"19\": \"y colaboración prestada y quedó atenta a\", \"6\": \"15\\/11\\/2019\", \"7\": \"11:20\", \"20\": \"3\", \"11\": [\"3\"], \"9\": [\"1\",\"2\"], \"15\": [\"3\"]}"
+        val objSaved = Json.getObject(saved)
+        val inflater = JsonFormInflate(my_var!!)
+        inflater.init(objSaved!!)
+
     }
 }

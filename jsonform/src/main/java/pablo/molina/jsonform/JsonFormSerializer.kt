@@ -50,11 +50,11 @@ class JsonFormSerializer(val jform: JsonForm) {
                         }
                         is RadioGroup -> {
                             Log.e("RadioGroup","error")
-                            val radiogroup = a.value as RadioGroup
+                            /*val radiogroup = a.value as RadioGroup
                             for(rb in 0..radiogroup.childCount){
                                 val myrb = radiogroup.getChildAt(rb) as AppCompatRadioButton
                                 //val myrb = radiogroup[rb] as RadioButton
-                            }
+                            }*/
                             //b.setEr
                         }
                         //else ->  null
