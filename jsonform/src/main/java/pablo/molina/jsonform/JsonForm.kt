@@ -16,9 +16,6 @@ import org.json.JSONObject
  * Created by Pablo Molina on 15-10-2019. s.pablo.molina@gmail.com
  */
 class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: FormStyles): JsonFormInt, JsonFormDrawerImpl(context, styles){
-    //private var mStyles:FormStyles
-
-
 
     var serializer:         JsonFormSerializer          = JsonFormSerializer(this)
     var jevents:            JsonFormEvents              = JsonFormEvents(this, context)
@@ -39,10 +36,9 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
         val size = jsonArray.length()
         for (a in 0 until size){
             val obj         = jsonArray.getJSONObject(a)
-            val container   = Json.getObject(obj,"container")
-            val cName       = Json.getText(container, "name")
+            val cName       = Json.getText(obj, "name")
             if(name==cName){
-                extractObj(container!!, mainLayout)
+                extractObj(obj!!, mainLayout)
             }
         }
     }
@@ -61,7 +57,6 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
 
     fun extractObj(obj:JSONObject, parentView:View?):View?{
         val type        = Json.getText(obj,"type")
-        val container   = Json.getObject(obj, "container")
         val childs      = Json.getArray(obj, "_childs")
 
         val c:View? = when(getType(type)){
@@ -71,8 +66,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                     val size = childs.length()
                     for (a in 0 until size){
                         val sobj    = childs.getJSONObject(a)
-                        val cChild  = Json.getObject(sobj, "container")
-                        linear      = extractObj(cChild!!, linear)
+                        linear      = extractObj(sobj!!, linear)
                     }
                 }
                 val scroll = someProc(type, obj)
@@ -150,11 +144,14 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                 add(box, label)
                 add(box, edittext)
             }
-            "dateedit"       -> { // Falta establecer como readonly
+            "dateedit"       -> {
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
                 val label           = drawerLabel(description, preOrientation, 2.0f)
-                val edittext        = drawerEditText(1, preOrientation, 3.0f)
+                val edittext        = drawerEditText(1, preOrientation, 3.0f).apply {
+                    isFocusable = false
+                    isFocusableInTouchMode = false
+                }
                 val image           = drawerImage(styles.dateImage, styles.dateBackgroundColor, preOrientation, 1.0f)
                 evt?.view = edittext
                 widgetsCollection[id] = edittext
@@ -162,11 +159,14 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                 add(box, edittext)
                 add(box, image)
             }
-            "timeedit"       -> { // Falta establecer como readonly
+            "timeedit"       -> {
                 val preOrientation  = getOrientation(obj, "orientation", true)
                 val box             = drawerBoxInput(preOrientation)
                 val label           = drawerLabel(description, preOrientation, 2.0f)
-                val edittext        = drawerEditText(1, preOrientation, 3.0f)
+                val edittext        = drawerEditText(1, preOrientation, 3.0f).apply {
+                    isFocusable = false
+                    isFocusableInTouchMode = false
+                }
                 val image           = drawerImage(styles.timeImage, styles.timeBackgroundColor, preOrientation, 1.0f)
                 evt?.view = edittext
                 widgetsCollection[id] = edittext
@@ -214,7 +214,6 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                     evt0.view = checkox
                     events.add(evt0)
 
-                    //widgetsCollection[id] = checkox
                     group.addView(checkox)
                 }
                 widgetsCollection[id] = group
@@ -308,8 +307,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
             if(actions!=null){
                 val size = actions.length()
                 for (a in 0 until size){
-                    val sobj    = actions.getJSONObject(a)
-                    val actObj  = Json.getObject(sobj, "action")
+                    val actObj  = actions.getJSONObject(a)
                     val atype   = Json.getText(actObj, "type")
                     val apredef = Json.getText(actObj, "predefined")
                     val items   = Json.getArray(actObj, "items")

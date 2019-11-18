@@ -1,16 +1,17 @@
 ||    Acciones:
 --------------------------------------------------------------------------------------------------------------
 "actions":[
-	{"action":{"type":"show",			"containerId":"x"}},
-	{"action":{"type":"hide",			"containerId":"x"}},
-	{"action":{"type":"disable",		"containerId":"x"}},
-	{"action":{"type":"enable",			"containerId":"x"}},
-	{"action":{"type":"set",			"containerId":"x", 	"itemId":1}},
-	{"action":{"type":"unset",			"containerId":"x"}},
-	{"action":{"type":"addMandatory",	"containerId":"x"}},
-	{"action":{"type":"rmMandatory",	"containerId":"x"}},
-	{"action":{"type":"open",			"containerId":"x", 		"predefined"="select_date"}}
-	{"action":{"type":"store",			"predefined"="select_date"}}
+	{"type":"show",			"containerId":"x"},
+	{"type":"hide",			"containerId":"x"},
+	{"type":"disable",		"containerId":"x"},
+	{"type":"enable",			"containerId":"x"}},
+	{"type":"set",			"containerId":"x", 	"items": ["2"]},
+	{"type":"set",			"containerId":"x", 	"items": ["true"]},
+	{"type":"unset"}},
+	{"type":"addMandatory",	"containerId":"x"},
+	{"type":"rmMandatory",	"containerId":"x"},
+	{"type":"open",			"containerId":"x", 		"predefined"="select_date"}
+	{"type":"store",			"predefined"="select_date"}
 ]
 
 
@@ -56,8 +57,8 @@ Ventana de fecha:
 	"type":	"change",
 	"conditions": {"condition":"ET", "value":"", "items":[2,4]},
 	"actions":[
-		{"action":{"type":"disable", "containerId":"x"}},
-		{"action":{"type":"disable", "containerId":"x"}}
+		{"type":"disable", "containerId":"x"},
+		{"type":"disable", "containerId":"x"}
 	]
 }
 
