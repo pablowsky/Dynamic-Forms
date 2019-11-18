@@ -1,13 +1,17 @@
 package pablo.molina.jsonform
 
+import android.text.InputType
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
+import org.json.JSONArray
 import pablo.molina.jsonform.event.JFormAction
 import pablo.molina.jsonform.event.JFormEvent
 import pablo.molina.jsonform.fragments.SelectDateFragment
 import pablo.molina.jsonform.fragments.SelectTimeFragment
+import pablo.molina.jsonform.widgets.CheckBoxGroup
 import pablo.molina.jsonform.widgets.PmCheckBox
 import pablo.molina.jsonform.widgets.PmRadioButton
 
@@ -26,9 +30,9 @@ open class JsonFormEvents(val jform: JsonForm, val activity: AppCompatActivity){
 
     fun startEvent(event: JFormEvent){
         when(event.type){
-            JFormEvent.Type.CHANGE -> startEventChange(event)
-            JFormEvent.Type.CLICK -> startEventClick(event)
-            JFormEvent.Type.LOAD -> {}
+            JFormEvent.Type.CHANGE  -> startEventChange(event)
+            JFormEvent.Type.CLICK   -> startEventClick(event)
+            JFormEvent.Type.LOAD    -> startEventLoad(event)
         }
     }
 
@@ -49,19 +53,16 @@ open class JsonFormEvents(val jform: JsonForm, val activity: AppCompatActivity){
             return
         }
 
-
         if(event.view!! is RadioGroup){
             val rg = event.view!! as  RadioGroup
             rg.setOnCheckedChangeListener { radioGroup, _ ->
                 val rb      = activity.findViewById<PmRadioButton>(radioGroup.checkedRadioButtonId)
                 jform.serializer.addValue(rb.parentId, arrayListOf(rb.itemId))
-                //selectedItems[rb.parentId] = arrayListOf(rb.itemId)
             }
         }
         if(event.view!! is PmCheckBox){
             val rg = event.view!! as  PmCheckBox
             rg.setOnCheckedChangeListener{ checkBoxView, isChecked  ->
-                //var list = selectedItems[rg.parentId]
                 var list = jform.serializer.getValue(rg.parentId)
                 if(list==null){
                     list = ArrayList()
@@ -72,12 +73,98 @@ open class JsonFormEvents(val jform: JsonForm, val activity: AppCompatActivity){
                     list.remove(rg.itemId)
                 }
                 when{
-                    list.size > 0   -> jform.serializer.addValue(rg.parentId, list) //selectedItems[rg.parentId] = list
-                    else            -> jform.serializer.rmValue(rg.parentId) //selectedItems.remove(rg.parentId)
+                    list.size > 0   -> jform.serializer.addValue(rg.parentId, list)
+                    else            -> jform.serializer.rmValue(rg.parentId)
                 }
             }
         }
     }
+
+    private fun startEventLoad(event: JFormEvent){
+        for(action in event.actions){
+            loadActionFor(action)
+        }
+    }
+
+    fun loadActionFor(action:JFormAction){
+        val actionType  =   action.type!!
+        val containerId =   action.containerId
+        val items       =   action.items
+        val widget      =   jform.getWidgets()[containerId]
+        val widgetG     =   jform.widgetsGroup[containerId]
+
+        when(actionType){
+            JFormAction.Type.DISABLE    -> disableWidget(widget!!, false)
+            JFormAction.Type.ENABLE     -> disableWidget(widget!!, true)
+            JFormAction.Type.SHOW       -> showWidget(widgetG!!, true)
+            JFormAction.Type.HIDE       -> showWidget(widgetG!!, false)
+            JFormAction.Type.SET        -> setValue(widget!!, items!!)
+            JFormAction.Type.UNSET      -> unsetValues(widget!!)
+            JFormAction.Type.ADD_MANDANTORY -> addMandatory(containerId)
+            JFormAction.Type.RM_MANDATORY   -> rmMandatory(containerId)
+        }
+    }
+
+    fun addMandatory(containerId:Int){
+        if(!jform.mandatoryFields.contains(containerId)){
+            jform.mandatoryFields.add(containerId)
+        }
+    }
+
+    fun rmMandatory(containerId:Int){
+        if(jform.mandatoryFields.contains(containerId)){
+            jform.mandatoryFields.remove(containerId)
+        }
+    }
+
+    fun disableWidget(widget:View, enable:Boolean){
+        when(widget){
+            is EditText     -> widget.isEnabled = enable
+            is Spinner      -> widget.isEnabled = enable
+            is Switch       -> widget.isEnabled = enable
+            is CheckBoxGroup -> {
+                for(witem in widget.children){
+                    witem.isEnabled = enable
+                }
+            }
+            is RadioGroup -> {
+                for(witem in widget.children){
+                    witem.isEnabled = enable
+                }
+            }
+        }
+    }
+
+    fun showWidget(widget:View, show:Boolean){
+        widget.visibility = if(show) View.VISIBLE else View.GONE
+    }
+
+    fun setValue(widget:View, items:JSONArray){
+        val inflater = JsonFormInflate(jform)
+        inflater.fill(widget, items)
+    }
+
+    fun unsetValues(widget:View){
+        val inflater = JsonFormInflate(jform)
+        when(widget){
+            is EditText         -> inflater.fill(widget,"")
+            is Spinner          -> inflater.fill(widget,"0")
+            is Switch           -> inflater.fill(widget,"false")
+            is CheckBoxGroup    -> {
+                for(witem  in widget.children){
+                    witem as PmCheckBox
+                    witem.isChecked = false
+                }
+            }
+            is RadioGroup       -> {
+                for(witem in widget.children){
+                    witem as PmRadioButton
+                    witem.isChecked = false
+                }
+            }
+        }
+    }
+
 
     inline fun <reified T : View>loadAction(view: View, actions:MutableList<JFormAction>){
 
@@ -92,28 +179,20 @@ open class JsonFormEvents(val jform: JsonForm, val activity: AppCompatActivity){
                 }
             }
             if (view is Button){
+                loadActionFor(action)
+                /*
                 if(action.type==JFormAction.Type.DISABLE){
                     Log.e("Se deshabilita algo", "-"+action.containerId)
                     val wgt = jform.getWidgets()[action.containerId]
                     wgt!!.isEnabled = false
 
-                    /*if(wgt!! is EditText){
-                        //wgt.
-                        //wgt.inputType = InputType.TYPE_NULL
-                        wgt.isEnabled = false
-                    }*/
                 }
                 if(action.type==JFormAction.Type.ENABLE){
                     Log.e("Se habilita algo", "-"+action.containerId)
                     val wgt = jform.getWidgets()[action.containerId]
                     wgt!!.isEnabled = true
 
-                    /*if(wgt!! is EditText){
-                        //wgt.
-                        //wgt.inputType = InputType.TYPE_NULL
-                        wgt.isEnabled = false
-                    }*/
-                }
+                }*/
             }
             // Otras acciones
 

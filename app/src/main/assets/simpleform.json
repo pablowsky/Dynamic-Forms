@@ -5,6 +5,14 @@
       "type": "scrollform",
       "width": "match_parent",
       "height": "match_parent",
+      "event":{
+        "type":	"load",
+        "actions":[
+          {"action":{"type":"addMandatory", "containerId":4}},
+          {"action":{"type":"addMandatory", "containerId":6}},
+          {"action":{"type":"addMandatory", "containerId":7}}
+        ]
+      },
       "_childs": [
         {"container": {
           "type": "title",
@@ -92,7 +100,12 @@
             "id": 18,
             "event":{
               "type":	"click",
-              "actions":[{"action":{"type":"enable", "containerId":17}}]
+              "actions":[
+                {"action":{"type":"enable", "containerId":17}},
+                {"action":{"type":"rmMandatory", "containerId":4}},
+                {"action":{"type":"rmMandatory", "containerId":6}},
+                {"action":{"type":"rmMandatory", "containerId":7}}
+              ]
             }
           }
         },
@@ -119,8 +132,7 @@
               },
               {
                 "id": 2,
-                "value": "Valor de prueba2",
-                "nonconfomity": true
+                "value": "Valor de prueba2"
               },
               {
                 "id": 3,
@@ -151,8 +163,7 @@
               },
               {
                 "id": 2,
-                "value": "Valor de prueba2",
-                "nonconfomity": true
+                "value": "Valor de prueba2"
               },
               {
                 "id": 3,
@@ -178,8 +189,7 @@
               },
               {
                 "id": 2,
-                "value": "prueba2",
-                "nonconfomity": true
+                "value": "prueba2"
               },
               {
                 "id": 3,
@@ -202,8 +212,7 @@
               },
               {
                 "id": 2,
-                "value": "prueba5",
-                "nonconfomity": true
+                "value": "prueba5"
               },
               {
                 "id": 3,
@@ -224,8 +233,7 @@
               },
               {
                 "id": 2,
-                "value": "Valor de prueba6",
-                "nonconfomity": true
+                "value": "Valor de prueba6"
               },
               {
                 "id": 3,
@@ -252,8 +260,7 @@
               },
               {
                 "id": 2,
-                "value": "Valor de prueba10",
-                "nonconfomity": true
+                "value": "Valor de prueba10"
               },
               {
                 "id": 3,
@@ -279,8 +286,7 @@
               },
               {
                 "id": 2,
-                "value": "prueba2",
-                "nonconfomity": true
+                "value": "prueba2"
               },
               {
                 "id": 3,
@@ -303,8 +309,7 @@
               },
               {
                 "id": 2,
-                "value": "prueba5",
-                "nonconfomity": true
+                "value": "prueba5"
               },
               {
                 "id": 3,
@@ -333,8 +338,7 @@
               },
               {
                 "id": 2,
-                "value": "Valor de prueba6",
-                "nonconfomity": true
+                "value": "Valor de prueba6"
               },
               {
                 "id": 3,

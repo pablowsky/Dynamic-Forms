@@ -17,25 +17,40 @@ class JsonFormInflate(val jform: JsonForm) {
 
     fun init(data:JSONObject){
         for(key in data.keys()){
-            val item = data[key]
-            Log.e(key.toString(), item.javaClass.simpleName)
+            //val item = data[key]
+            //Log.e(key.toString(), item.javaClass.simpleName)
             val keyI = key.toInt()
             if(jform.getWidgets().containsKey(keyI)){
                 val widget = jform.getWidgets()[keyI]
 
-                Log.e(key.toString(), widget!!.javaClass.simpleName)
+                //Log.e(key.toString(), widget!!.javaClass.simpleName)
                 if(widget!=null) {
-                    if(item is String) {
+                    fill(widget, data[key])
+                    /*if(item is String) {
                         filler(widget, item)
                     }else if(item is JSONArray) {
                         filler(widget, item)
-                    }
+                    }*/
                 }
             }
         }
     }
 
-    fun filler(widget:View, value: String){
+    fun fill(widget:View, values: Any){
+        if(widget is EditText || widget is Spinner || widget is Switch){
+            val value = if(values is JSONArray){
+                values[0].toString()
+            }else{
+                values as String
+            }
+            //val sValue = values as String
+            filler(widget, value)
+        }else if(widget is CheckBoxGroup || widget is RadioGroup){
+            filler(widget, values as JSONArray)
+        }
+    }
+
+    private fun filler(widget:View, value: String){
         when(widget){
             is EditText -> {
                 widget.setText(value)
@@ -44,10 +59,13 @@ class JsonFormInflate(val jform: JsonForm) {
                 val valueI = value.toInt()
                 LoadSpin.setSelected(widget, valueI)
             }
+            is Switch -> {
+                widget.isChecked = (value=="true")
+            }
         }
     }
 
-    fun filler(widget:View, values: JSONArray){
+    private fun filler(widget:View, values: JSONArray){
         when(widget){
             is RadioGroup -> {
 
@@ -66,7 +84,7 @@ class JsonFormInflate(val jform: JsonForm) {
 
             }
             is CheckBoxGroup -> {
-                Log.e("key4","-"+values)
+                //Log.e("key4","-"+values)
                 // Verificar si es CheckBox
                 val size = values.length()
                 for (a in 0 until size){
@@ -74,7 +92,7 @@ class JsonFormInflate(val jform: JsonForm) {
                     for(rbKey in 0..widget.childCount){
                         val rb = widget.getChildAt(rbKey)
                         if(rb is PmCheckBox) {
-                            Log.e("key5",rb.itemId+"-"+cValue.toString())
+                            //Log.e("key5",rb.itemId+"-"+cValue.toString())
                             if(rb.itemId==cValue.toString()){
                                 rb.isChecked = true
                             }

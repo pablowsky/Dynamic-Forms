@@ -264,8 +264,15 @@ open class JsonFormDrawerImpl(val context: Context, val styles: FormStyles){
             this.layoutParams = Layout.p2
             this.id         = getLayoutId()
             this.text       = description
-            //this.textOff    = textOff
-            //this.textOn     = textOn
+            this.textOff    = textOff
+            this.textOn     = textOn
+            setTextAppearance(context, styles.labelNormal)
+            setPadding(
+                Layout.boxPadding[0],
+                Layout.boxPadding[1],
+                Layout.boxPadding[2],
+                Layout.boxPadding[3]
+            )
         }
     }
 }

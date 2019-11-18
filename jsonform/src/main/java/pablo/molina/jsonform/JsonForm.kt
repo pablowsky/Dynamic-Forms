@@ -24,11 +24,12 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
     var jevents:            JsonFormEvents              = JsonFormEvents(this, context)
     val mandatoryFields:    ArrayList<Int>              = ArrayList()
     val events:             ArrayList<JFormEvent>       = ArrayList()
+    val widgetsGroup:       HashMap<Int, View>          = HashMap()
     private val widgetsCollection:HashMap<Int, View>    = HashMap()
     private var baseLayout                              = LinearLayout(context)
 
     private val contBoxes       = arrayOf("linearlayout","afterscroll","scrollform","cardbox")
-    private val contWidgets     = arrayOf("textedit","dateedit","timeedit","listbox","checkbox","radiobutton","button","title")
+    private val contWidgets     = arrayOf("textedit","dateedit","timeedit","listbox","checkbox","radiobutton","button","title", "switch")
     private val contSpecials    = arrayOf("tablayout","tabitem")
     private val contPredefined  = arrayOf("add_items","check_items","pictures_gallery")
 
@@ -94,7 +95,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
     }
 
     private fun someProc(type:String, obj: JSONObject?):View?{
-
+        var evt             = getEvent(obj)
         return when(type){
             "boxInput"  -> {
                 drawerBoxInput(null)
@@ -118,6 +119,10 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                 Button(context)
             }
             else -> View(context)
+        }.apply {
+            if(evt!=null) {
+                events.add(evt)
+            }
         }
     }
 
@@ -260,6 +265,7 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
             /*if(id!=0) {
                 setId(id)
             }*/
+            widgetsGroup[id] = this
 
             if(mandatory){
                 mandatoryFields.add(id)
@@ -306,10 +312,12 @@ class JsonForm(val jsonArray: JSONArray, context: AppCompatActivity, styles: For
                     val actObj  = Json.getObject(sobj, "action")
                     val atype   = Json.getText(actObj, "type")
                     val apredef = Json.getText(actObj, "predefined")
+                    val items   = Json.getArray(actObj, "items")
                     val acontid = Json.getInt(actObj, "containerId", 0)
                     val act = JFormAction()
                     act.containerId = acontid
                     act.predefined  = apredef
+                    act.items       = items
                     act.type        = when(atype){
                         "addMandatory"      -> JFormAction.Type.ADD_MANDANTORY
                         "disable"           -> JFormAction.Type.DISABLE
