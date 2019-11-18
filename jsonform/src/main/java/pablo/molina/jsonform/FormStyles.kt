@@ -1,12 +1,12 @@
 package pablo.molina.jsonform
 
 import android.graphics.drawable.Drawable
-import android.text.style.BackgroundColorSpan
 
 /**
  * Created by Pablo Molina on 14-11-2019. s.pablo.molina@gmail.com
  */
 data class FormStyles(val name:String) {
+    var messageError = String()
     var spinnerNormal: Drawable? = null
     var spinnerError: Drawable? = null
     var spinnerSelected: Int = 0

@@ -66,6 +66,7 @@ class FormActivity : DaggerAppCompatActivity(), FormContract.View {
 
     override fun loadForm(array: JSONArray){
         val mStyles = FormStyles("").apply {
+            messageError        =   "Falta completar"
             spinnerNormal       =   getDrawable(R.drawable.spinner)
             spinnerError        =   getDrawable(R.drawable.spinner_error)
             spinnerSelected     =   R.style.spinnerParams

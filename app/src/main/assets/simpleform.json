@@ -7,10 +7,6 @@
     "event":{
       "type":	"load",
       "actions":[
-        {"type":"addMandatory", "containerId":4},
-        {"type":"addMandatory", "containerId":6},
-        {"type":"addMandatory", "containerId":7},
-        {"type":"hide", "containerId":19}
       ]
     },
     "_childs": [
@@ -137,6 +133,7 @@
         "type": "checkbox",
         "description": "Casillas de prueba",
         "id": 8,
+        "mandatory": true,
         "orientation": "horizontal",
         "items": [
           {

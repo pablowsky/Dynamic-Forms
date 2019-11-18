@@ -1,16 +1,11 @@
 package pablo.molina.jsonform
 
 import android.util.Log
-import android.widget.EditText
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.Spinner
-import androidx.core.view.get
 import org.json.JSONArray
 import org.json.JSONObject
 import pablo.molina.jsonform.spinner.SelectableItem
-import android.content.res.ColorStateList
-import androidx.appcompat.widget.AppCompatRadioButton
+import android.widget.*
+import pablo.molina.jsonform.widgets.CheckBoxGroup
 
 
 /**
@@ -24,47 +19,68 @@ class JsonFormSerializer(val jform: JsonForm) {
         val widgets = jform.getWidgets()
         jObj = JSONObject()
         for(a in widgets){
-            val value:String? = when(a.value){
-                is EditText -> {
-                    val b = a.value as EditText
-                    b.text.toString()
-                }
-                is Spinner -> {
-                    getSelectedSpinString(a.value as Spinner)
-                }
-                else ->  null
+            val widget      = a.value
+            val mandatory   = jform.mandatoryFields.contains(a.key)
+            val value:String? = when(widget) {
+                is EditText -> getEditTextValue(widget, mandatory)
+                is Spinner -> getSpinnerValue(widget, mandatory)
+                is Switch -> getSwitchValue(widget)
+                else -> null
             }
             if(!value.isNullOrEmpty()) {
                 jObj!!.put(a.key.toString(), value)
-            }else{
-                if(jform.mandatoryFields.contains(a.key)){
-                    when(a.value){
-                        is EditText -> {
-                            val b = a.value as EditText
-                            b.setError("Falta completar")
-                        }
-                        is Spinner -> {
-                            val b = a.value as Spinner
-                            b.background = jform.styles.spinnerError
-                            //b.set
-                        }
-                        is RadioGroup -> {
-                            Log.e("RadioGroup","error")
-                            /*val radiogroup = a.value as RadioGroup
-                            for(rb in 0..radiogroup.childCount){
-                                val myrb = radiogroup.getChildAt(rb) as AppCompatRadioButton
-                                //val myrb = radiogroup[rb] as RadioButton
-                            }*/
-                            //b.setEr
-                        }
-                        //else ->  null
-                    }
-                }
+            }
 
+            val value2:JSONArray? = when(widget){
+                is RadioGroup       -> getRadioGroupValue(a.key, mandatory)
+                is CheckBoxGroup    -> getCheckBoxGroupValue(a.key, mandatory)
+                else ->  null
+            }
+            if(value2!=null) {
+                jObj!!.put(a.key.toString(), value2)
             }
         }
-        for(item in selectedItems){
-            jObj!!.put(item.key.toString(), JSONArray(item.value))
+    }
+
+    private fun getEditTextValue(widget:EditText, mandatory:Boolean):String{
+        val value = widget.text.toString()
+        widget.error = if(value.isEmpty() && mandatory) {
+            jform.styles.messageError
+        }else{
+            null
+        }
+        return value
+    }
+    private fun getSpinnerValue(widget:Spinner, mandatory:Boolean):String{
+        val value = getSelectedSpinString(widget)
+        widget.background = if(value.isEmpty() && mandatory) {
+            jform.styles.spinnerError
+        }else{
+            jform.styles.spinnerNormal
+        }
+        return value
+    }
+    private fun getSwitchValue(widget:Switch):String{
+        return widget.isChecked.toString()
+    }
+    private fun getRadioGroupValue(id:Int, mandatory:Boolean):JSONArray?{
+        return when {
+            selectedItems.contains(id) -> JSONArray(selectedItems[id])
+            mandatory ->
+                // genero aviso de error
+
+                null
+            else -> null
+        }
+    }
+    private fun getCheckBoxGroupValue(id:Int, mandatory:Boolean):JSONArray?{
+        return when {
+            selectedItems.contains(id) -> JSONArray(selectedItems[id])
+            mandatory ->
+                // genero aviso de error
+
+                null
+            else -> null
         }
     }
 
@@ -101,7 +117,7 @@ class JsonFormSerializer(val jform: JsonForm) {
     }
 
     fun getSelectedSpinString(sp: Spinner): String {
-        var resp:String = ""
+        var resp = ""
         var obj: SelectableItem? = null
         try {
             obj = sp.selectedItem as SelectableItem
