@@ -1,0 +1,332 @@
+[
+  {
+    "id": 22,
+    "type": "scrollform",
+    "width": "match_parent",
+    "height": "match_parent",
+    "event":{
+      "type":	"load",
+      "actions":[
+      ]
+    },
+    "_childs": [
+      {
+        "type": "title",
+        "description": "Titulo Campos de texto de prueba",
+        "id":1
+      },
+      {
+        "type": "textedit",
+        "description": "Campo de prueba 1",
+        "id": 19,
+        "lines": "1",
+        "inputType": "email",
+        "mandatory": true,
+        "orientation": "horizontal"
+      },
+      {
+        "type": "textedit",
+        "description": "Campo de prueba 2",
+        "id": 4,
+        "lines": "1",
+        "orientation": "vertical"
+      },
+      {
+        "type": "textedit",
+        "description": "Campo de prueba 3",
+        "id": 5,
+        "lines": "1",
+        "inputType": "date",
+        "mandatory": true
+      },  
+	  {
+		"id": 21,
+		"type": "cardbox",
+		"width": "match_parent",
+		"height": "wrap_content",
+		"_childs": [
+		  {
+			"type": "dateedit",
+			"description": "fecha de prueba",
+			"id": 6,
+			"orientation": "horizontal",
+			"event":{
+				  "type":	"click",
+				  "actions":[{"type":"open", "predefined":"select_date"}]
+			}
+		  },
+		  {
+			"type": "timeedit",
+			"description": "hora de prueba",
+			"id": 7,
+			"orientation": "horizontal",
+			"event":{
+			  "type":	"click",
+			  "actions":[{"type":"open", "predefined":"select_time"}]
+			}
+		  }
+		]
+	  },
+      {
+        "type": "switch",
+        "description": "Switch de prueba 1",
+        "valueOff": "N",
+        "valueOn": "S",
+        "id": 14
+      },
+      {
+        "type": "button",
+        "description": "boton de prueba1",
+        "id": 17,
+        "event":{
+          "type":	"click",
+          "actions":[{"type":"disable", "containerId":17}]
+        }
+
+      },
+      {
+        "type": "button",
+        "description": "boton de prueba2",
+        "id": 18,
+        "event":{
+          "type":	"click",
+          "actions":[
+            {"type":"enable", "containerId":17},
+            {"type":"rmMandatory", "containerId":4},
+            {"type":"rmMandatory", "containerId":6},
+            {"type":"rmMandatory", "containerId":7}
+          ]
+        }
+      },
+      {
+        "type": "title",
+        "description": "Titulo Listados de prueba",
+        "id":2
+      },
+      {
+        "type": "listbox",
+        "description": "Listado de prueba",
+        "id": 20,
+        "mandatory": true,
+        "orientation": "horizontal",
+        "items": [
+          {
+            "id": "",
+            "value": "Seleccione"
+          },
+          {
+            "id": 1,
+            "value": "Valor de prueba1"
+          },
+          {
+            "id": 2,
+            "value": "Valor de prueba2"
+          },
+          {
+            "id": 3,
+            "value": "Valor de prueba3"
+          },
+          {
+            "id": 4,
+            "value": "Valor de prueba4"
+          }
+        ]
+      },
+      {
+        "type": "title",
+        "description": "Titulo Casillas de prueba",
+        "id":3
+      },
+      {
+        "type": "checkbox",
+        "description": "Casillas de prueba",
+        "id": 8,
+        "mandatory": true,
+        "orientation": "horizontal",
+        "items": [
+          {
+            "id": 1,
+            "value": "Valor de prueba1"
+          },
+          {
+            "id": 2,
+            "value": "Valor de prueba2"
+          },
+          {
+            "id": 3,
+            "value": "Valor de prueba3"
+          },
+          {
+            "id": 4,
+            "value": "Valor de prueba4"
+          }
+        ]
+
+      },
+      {
+        "type": "checkbox",
+        "description": "Casillas de prueba2",
+        "id": 9,
+        "itemsOrientation": "horizontal",
+        "items": [
+          {
+            "id": 1,
+            "value": "prueba1"
+          },
+          {
+            "id": 2,
+            "value": "prueba2"
+          },
+          {
+            "id": 3,
+            "value": "prueba3"
+          }
+        ]
+
+      },
+      {
+        "type": "checkbox",
+        "description": "Casillas de prueba3",
+        "id": 15,
+        "orientation": "vertical",
+        "itemsOrientation": "horizontal",
+        "items": [
+          {
+            "id": 1,
+            "value": "prueba4"
+          },
+          {
+            "id": 2,
+            "value": "prueba5"
+          },
+          {
+            "id": 3,
+            "value": "prueba6"
+          }
+        ]
+      },
+      {
+        "type": "checkbox",
+        "id": 10,
+        "itemsOrientation": "horizontal",
+        "items": [
+          {
+            "id": 1,
+            "value": "Valor de prueba5"
+          },
+          {
+            "id": 2,
+            "value": "Valor de prueba6"
+          },
+          {
+            "id": 3,
+            "value": "Valor de prueba7"
+          },
+          {
+            "id": 4,
+            "value": "Valor de prueba8"
+          }
+        ]
+      },
+      {
+        "type": "radiobutton",
+        "description": "Punto de prueba",
+        "id": 11,
+        "mandatory": true,
+        "orientation": "vertical",
+        "items": [
+          {
+            "id": 1,
+            "value": "Valor de prueba9"
+          },
+          {
+            "id": 2,
+            "value": "Valor de prueba10"
+          },
+          {
+            "id": 3,
+            "value": "Valor de prueba11"
+          },
+          {
+            "id": 4,
+            "value": "Valor de prueba12"
+          }
+        ]
+
+      },
+      {
+        "type": "radiobutton",
+        "description": "Punto de prueba2",
+        "id": 12,
+        "itemsOrientation": "horizontal",
+        "items": [
+          {
+            "id": 1,
+            "value": "prueba1"
+          },
+          {
+            "id": 2,
+            "value": "prueba2"
+          },
+          {
+            "id": 3,
+            "value": "prueba3"
+          }
+        ]
+      },
+      {
+        "type": "radiobutton",
+        "description": "Punto de prueba3",
+        "id": 16,
+        "orientation": "vertical",
+        "itemsOrientation": "horizontal",
+        "items": [
+          {
+            "id": 1,
+            "value": "prueba4"
+          },
+          {
+            "id": 2,
+            "value": "prueba5"
+          },
+          {
+            "id": 3,
+            "value": "prueba6"
+          }
+        ]
+      },
+      {
+        "type": "radiobutton",
+        "id": 13,
+        "itemsOrientation": "horizontal",
+        "event":{
+          "type": "change",
+          "conditions": {"condition":"ET", "value":"", "items":[2,4]},
+          "actions":[
+            {"type":"disable", "containerId":"x"},
+            {"type":"disable", "containerId":"x"}
+          ]
+        },
+        "items": [
+          {
+            "id": 1,
+            "value": "Valor de prueba5"
+          },
+          {
+            "id": 2,
+            "value": "Valor de prueba6"
+          },
+          {
+            "id": 3,
+            "value": "Valor de prueba7"
+          },
+          {
+            "id": 4,
+            "value": "Valor de prueba8"
+          }
+        ]
+      }
+    ]
+
+  }
+]

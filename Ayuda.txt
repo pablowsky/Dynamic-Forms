@@ -112,6 +112,7 @@ Para v2
 "cardbox"
 
 -- Widgets
+"title"
 "textedit"
 "dateedit"
 "timeedit"
